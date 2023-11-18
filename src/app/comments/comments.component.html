@@ -1,1 +1,19 @@
-<p>comments works!</p>
+<div
+  *ngFor="let comment of (comments | keyvalue)"
+  class="card text-start"
+>
+  <div class="card-body">
+    <h4 class="card-title">
+      {{
+        comment.value.commenter_name
+          ? comment.value.commenter_name
+          : "Anonomous"
+      }}
+      -
+      {{ comment.value.date_entered | date }}
+    </h4>
+    <p class="card-text">{{ comment.value.comment_text }}</p>
+  </div>
+  <comments
+  *ngFor="let reply of (comment.value.replies)"></comments>
+</div>
