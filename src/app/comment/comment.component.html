@@ -1,0 +1,29 @@
+<div class="card text-start">
+  <div class="card-body">
+    <h4 class="card-title">
+      {{
+        commentObject.commenter_name
+          ? commentObject.commenter_name
+          : "Anonomous"
+      }}
+      -
+      {{ commentObject.date_entered | timeSince }}
+    </h4>
+    <p class="card-text">{{ commentObject.comment_text }}</p>
+  </div>
+  <div *ngIf="commentObject.replies.length > 0" class="reply_header">
+    <h5>
+      {{
+        commentObject.replies.length > 1
+          ? commentObject.replies.length + " Replies"
+          : "1 Reply"
+      }}
+    </h5>
+    <button type="button" class="btn btn-primary btn-sm">Show</button>
+  </div>
+  <comment
+    *ngFor="let replyId of commentObject.replies"
+    [commentObject]="comments[replyId]"
+    [comments]="comments"
+  ></comment>
+</div>

@@ -1,19 +1,22 @@
-<div
-  *ngFor="let comment of (comments | keyvalue)"
-  class="card text-start"
->
-  <div class="card-body">
-    <h4 class="card-title">
-      {{
-        comment.value.commenter_name
-          ? comment.value.commenter_name
-          : "Anonomous"
-      }}
-      -
-      {{ comment.value.date_entered | date }}
-    </h4>
-    <p class="card-text">{{ comment.value.comment_text }}</p>
+<div class="comments_container">
+  <div class="header">
+    <h2>Comments</h2>
+    <h3>{{ threads.length }} threads</h3>
+
+    <mat-paginator
+      (page)="handlePageEvent($event)"
+      [length]="threads.length"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      [pageIndex]="pageIndex"
+      aria-label="Select page"
+    >
+    </mat-paginator>
   </div>
-  <comments
-  *ngFor="let reply of (comment.value.replies)"></comments>
+
+  <comment
+    *ngFor="let commentId of threads"
+    [commentObject]="comments[commentId]"
+    [comments]="comments"
+  ></comment>
 </div>

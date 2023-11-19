@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { map, Observable } from 'rxjs';
 
-import { Comment } from '../comments/comments.component';
+import { Comment } from '../comment/comment.component';
 
 import { DataService } from './data.service';
 
