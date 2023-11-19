@@ -2,13 +2,5 @@
 
 @import "../node_modules/@angular/material/prebuilt-themes/purple-green.css";
 
-
-body {
-  padding: 20px;
-}
-
-.ng-touched .ng-invalid {
-  border: solid 2px red;
-}
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
