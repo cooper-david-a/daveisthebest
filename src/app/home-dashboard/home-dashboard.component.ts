@@ -1,33 +1,24 @@
-import { Component, inject } from '@angular/core';
-import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
-import { map } from 'rxjs/operators';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'home-dashboard',
   templateUrl: './home-dashboard.component.html',
-  styleUrls: ['./home-dashboard.component.css']
+  styleUrls: ['./home-dashboard.component.css'],
 })
 export class HomeDashboardComponent {
-  private breakpointObserver = inject(BreakpointObserver);
+  cards = [
+    {
+      title: 'HIIT Timer',
+      imgUrl: 'assets/images/HIIT_Timer_card.png',
+      text: 'This is the best HIIT Timer ever.',
+      linkUrl: '/HIIT_Timer'
+    },
+    {
+      title: 'Thermodynamic Property Calculator',
+      imgUrl: 'assets/images/ThermoPropertyCalculator_card.png',
+      text: 'Calculate thermodynamic properties of water and R134a.',
+      linkUrl: '/ThermoPropCalc'
+    },
 
-  /** Based on the screen size, switch from standard to one column per row */
-  cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
-    map(({ matches }) => {
-      if (matches) {
-        return [
-          { title: 'Card 1', cols: 1, rows: 1 },
-          { title: 'Card 2', cols: 1, rows: 1 },
-          { title: 'Card 3', cols: 1, rows: 1 },
-          { title: 'Card 4', cols: 1, rows: 1 }
-        ];
-      }
-
-      return [
-        { title: 'Card 1', cols: 1, rows: 1 },
-        { title: 'Card 2', cols: 1, rows: 1 },
-        { title: 'Card 3', cols: 1, rows: 1 },
-        { title: 'Card 4', cols: 1, rows: 1 }
-      ];
-    })
-  );
+  ];
 }
