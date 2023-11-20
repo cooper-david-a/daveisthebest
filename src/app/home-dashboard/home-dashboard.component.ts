@@ -17,7 +17,7 @@ export class HomeDashboardComponent {
       title: 'Thermodynamic Property Calculator',
       imgUrl: 'assets/images/ThermoPropertyCalculator_card.png',
       text: 'Calculate thermodynamic properties of water and R134a.',
-      linkUrl: '/ThermoPropCalc'
+      linkUrl: '/ThermodynamicPropertyCalculator'
     },
 
   ];

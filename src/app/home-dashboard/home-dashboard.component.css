@@ -6,14 +6,28 @@
 }
 
 mat-card {
-  max-width: 300px;
+  width: 300px;
+  height: 450px;
   margin: 20px;
 }
 
 mat-card-header {
+  height: 15%;
+  border-bottom: solid 1px;
   margin-bottom: 20px;
 }
 
 mat-card-content {
-  margin-top: 20px;
+  height: 10%;
+  border-top: solid 1px;
+  padding-top: 20px;
+  margin-top: 10px;
+  font-size: large;
+}
+
+.image-div {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  flex-grow: 1;
 }

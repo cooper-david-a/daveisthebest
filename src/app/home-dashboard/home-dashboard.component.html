@@ -1,18 +1,16 @@
 <div class="card-container">
   <mat-card *ngFor="let card of cards">
-
     <mat-card-header>
-      <mat-card-title>{{card.title}}</mat-card-title>
+      <mat-card-title>{{ card.title }}</mat-card-title>
     </mat-card-header>
 
-    <img
-      src={{card.imgUrl}}
-      alt={{card.title}}
-    />
+    <div
+      class="image-div"
+      [style.background-image]="'url(' + card.imgUrl + ')'"
+    ></div>
 
     <mat-card-content>
-      <p>{{card.text}}</p>
+      <p>{{ card.text }}</p>
     </mat-card-content>
-
   </mat-card>
 </div>
