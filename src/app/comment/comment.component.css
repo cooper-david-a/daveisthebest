@@ -1,5 +1,7 @@
-comment {
-  padding: 5px 0px 5px 10px;
+mat-card {
+  padding: 5px 1px 1px 20px;
+  margin: 5px;
+  border: solid 1px;
 }
 
 .reply_header button,h5{

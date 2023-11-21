@@ -1,6 +1,6 @@
-<div class="card text-start">
-  <div class="card-body">
-    <h4 class="card-title">
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>
       {{
         commentObject.commenter_name
           ? commentObject.commenter_name
@@ -8,9 +8,12 @@
       }}
       -
       {{ commentObject.date_entered | timeSince }}
-    </h4>
-    <p class="card-text">{{ commentObject.comment_text }}</p>
-  </div>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    {{ commentObject.comment_text }}
+  </mat-card-content>
+
   <div *ngIf="commentObject.replies.length > 0" class="reply_header">
     <h5>
       {{
@@ -26,4 +29,4 @@
     [commentObject]="comments[replyId]"
     [comments]="comments"
   ></comment>
-</div>
+</mat-card>

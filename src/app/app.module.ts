@@ -4,7 +4,6 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CardComponent } from './card/card.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { HomeComponent } from './pages/home/home.component';
 import { DataService } from './services/data.service';
@@ -29,7 +28,6 @@ import { MatButtonModule } from '@angular/material/button';
   declarations: [
     AppComponent,
     NavbarComponent,
-    CardComponent,
     HomeComponent,
     CommentsComponent,
     CommentComponent,
