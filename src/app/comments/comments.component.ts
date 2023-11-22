@@ -1,16 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Injectable, OnInit } from '@angular/core';
 
-import { PageEvent } from '@angular/material/paginator';
+import { MatPaginatorIntl, PageEvent } from '@angular/material/paginator';
 
 import { Comment } from '../comment/comment.component';
 
 import { CommentsService } from '../services/comments.service';
 
+@Injectable()
+export class CommentsPaginator extends MatPaginatorIntl {
+  override itemsPerPageLabel = `Threads per page:`;
+}
+
 @Component({
   selector: 'comments',
   templateUrl: './comments.component.html',
   styleUrls: ['./comments.component.css'],
+  providers: [{ provide: MatPaginatorIntl, useClass: CommentsPaginator }],
 })
+
 export class CommentsComponent implements OnInit {
   comments!: Comments;
   threads: number[] = [];
@@ -18,13 +25,19 @@ export class CommentsComponent implements OnInit {
   pageSizeOptions = [5, 10, 25, 50];
   pageSize = 5;
   pageIndex = 0;
+  pageContent: number[] = [];
 
 
-  constructor(private service: CommentsService) {}
+  constructor(
+    private service: CommentsService,
+  ) {}
 
   ngOnInit(): void {
+
     this.service.getComments().subscribe((comments) => {
       this.configureComments(comments);
+      let [first, last] = this.getPage();
+      this.pageContent = this.threads.slice(first, last);
     });
   }
 
@@ -37,13 +50,19 @@ export class CommentsComponent implements OnInit {
     });
 
     this.comments = commentsObject;
-
   }
 
   handlePageEvent(e: PageEvent) {
     this.pageSize = e.pageSize;
     this.pageIndex = e.pageIndex;
-    console.log(e);
+    let [first, last] = this.getPage();
+    this.pageContent = this.threads.slice(first, last);
+  }
+
+  getPage(): [number, number] {
+    let first = this.pageIndex * this.pageSize;
+    let last = first + this.pageSize;
+    return [first, last];
   }
 }
 

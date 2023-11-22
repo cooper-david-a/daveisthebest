@@ -1,7 +1,7 @@
 <div class="comments_container">
   <div class="header">
     <h2>Comments</h2>
-    <h3>{{ threads.length }} threads</h3>
+    <comment-form></comment-form>
 
     <mat-paginator
       (page)="handlePageEvent($event)"
@@ -9,13 +9,14 @@
       [pageSize]="pageSize"
       [pageSizeOptions]="pageSizeOptions"
       [pageIndex]="pageIndex"
+      [showFirstLastButtons]="true"
       aria-label="Select page"
     >
     </mat-paginator>
   </div>
 
   <comment
-    *ngFor="let commentId of threads"
+    *ngFor="let commentId of pageContent"
     [commentObject]="comments[commentId]"
     [comments]="comments"
   ></comment>

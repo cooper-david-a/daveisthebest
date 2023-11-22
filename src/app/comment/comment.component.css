@@ -1,10 +1,19 @@
 mat-card {
-  padding: 5px 1px 1px 20px;
-  margin: 5px;
   border: solid 1px;
+  padding-bottom: 5px;
+  margin: 3px;
 }
 
-.reply_header button,h5{
-  display: inline;
-  padding: 10px;
+span{
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  padding: 0 5px 0 5px;
+  cursor: pointer;
+  border: solid 1px;
+  border-radius: 5px;
+}
+
+.reply {
+  margin-left: 10px;
 }

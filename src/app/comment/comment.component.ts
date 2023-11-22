@@ -11,6 +11,20 @@ export class CommentComponent {
 
     @Input() commentObject!: Comment;
     @Input() comments!: Comments;
+    repliesHidden = true;
+    replyFormShown = false;
+
+    showReplies(){
+      this.repliesHidden = !this.repliesHidden;
+    }
+
+    showReplyForm(){
+      this.replyFormShown = true;
+    }
+
+    closeReplyForm(){
+      this.replyFormShown = false;
+    }
 
 }
 

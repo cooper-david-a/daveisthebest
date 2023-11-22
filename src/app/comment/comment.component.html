@@ -10,23 +10,31 @@
       {{ commentObject.date_entered | timeSince }}
     </mat-card-title>
   </mat-card-header>
+
   <mat-card-content>
-    {{ commentObject.comment_text }}
+    <p>{{ commentObject.comment_text }}</p>
+
+    <div class="reply-header">
+      <span (click)="showReplyForm()">Reply</span>
+      <span *ngIf="commentObject.replies.length > 0" (click)="showReplies()">
+        <mat-icon *ngIf="repliesHidden">keyboard_arrow_right</mat-icon>
+        <mat-icon *ngIf="!repliesHidden">keyboard_arrow_down</mat-icon>
+        {{
+          commentObject.replies.length > 1
+            ? commentObject.replies.length + " Replies"
+            : "1 Reply"
+        }}
+      </span>
+    </div>
   </mat-card-content>
 
-  <div *ngIf="commentObject.replies.length > 0" class="reply_header">
-    <h5>
-      {{
-        commentObject.replies.length > 1
-          ? commentObject.replies.length + " Replies"
-          : "1 Reply"
-      }}
-    </h5>
-    <button type="button" class="btn btn-primary btn-sm">Show</button>
-  </div>
   <comment
+    class="reply"
     *ngFor="let replyId of commentObject.replies"
     [commentObject]="comments[replyId]"
     [comments]="comments"
+    [hidden]="repliesHidden"
   ></comment>
 </mat-card>
+
+<comment-form *ngIf="replyFormShown" [closable]="true" (close)="closeReplyForm()"></comment-form>

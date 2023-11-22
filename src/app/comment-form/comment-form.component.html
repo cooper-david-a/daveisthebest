@@ -1,0 +1,15 @@
+<form #f="ngForm">
+  <button *ngIf="closable" class="close-button" mat-mini-fab color="primary" (click)="handleCloseForm()">
+    <mat-icon>close</mat-icon>
+  </button>
+
+  <mat-form-field appearance="outline" class="name-field">
+    <input matInput ngModel name="name" placeholder="Name (optional)" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="comment-field">
+    <textarea matInput ngModel name="comment" placeholder="Comment"></textarea>
+  </mat-form-field>
+
+  <button class="post-button" mat-raised-button color="primary" [disabled]="!f.valid">Post</button>
+</form>

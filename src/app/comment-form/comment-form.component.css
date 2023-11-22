@@ -1,0 +1,29 @@
+form {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-items: left;
+  margin-bottom: 10px;
+}
+
+.name-field {
+  width: 25%;
+  min-width: 200px;
+  max-width: 400px;
+}
+
+.comment-field {
+  width: 100%;
+}
+
+.post-button {
+  width: 25%;
+  min-width: 200px;
+  max-width: 400px;
+}
+
+.close-button {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
