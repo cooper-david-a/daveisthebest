@@ -16,7 +16,6 @@ import { TimeSincePipe } from './pipes/time-since.pipe';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeDashboardComponent } from './home-dashboard/home-dashboard.component';
 import { CommentFormComponent } from './comment-form/comment-form.component';
-import { StyleManagerService } from './services/style-manager.service';
 
 import { AppMaterialModule } from './app-material.module';
 
@@ -41,7 +40,6 @@ import { AppMaterialModule } from './app-material.module';
     FormsModule,
   ],
   providers: [
-    StyleManagerService,
     DataService,
     CommentsService,
     { provide: ErrorHandler, useClass: AppErrorHandler },

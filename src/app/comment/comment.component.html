@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card appearance="outlined">
   <mat-card-header>
     <mat-card-title>
       {{
@@ -15,7 +15,7 @@
     <p>{{ commentObject.comment_text }}</p>
 
     <div class="reply-header">
-      <span (click)="showReplyForm()">Reply</span>
+      <button mat-raised-button color=primary (click)="showReplyForm()"> Reply </button>
       <span *ngIf="commentObject.replies.length > 0" (click)="showReplies()">
         <mat-icon *ngIf="repliesHidden">keyboard_arrow_right</mat-icon>
         <mat-icon *ngIf="!repliesHidden">keyboard_arrow_down</mat-icon>
@@ -37,4 +37,9 @@
   ></comment>
 </mat-card>
 
-<comment-form *ngIf="replyFormShown" [parentCommentId]="commentObject.id" [closable]="true" (close)="closeReplyForm()"></comment-form>
+<comment-form
+  *ngIf="replyFormShown"
+  [parentCommentId]="commentObject.id"
+  [closable]="true"
+  (close)="closeReplyForm()"
+></comment-form>
