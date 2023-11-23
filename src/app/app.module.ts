@@ -15,17 +15,10 @@ import { CommentComponent } from './comment/comment.component';
 import { TimeSincePipe } from './pipes/time-since.pipe';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeDashboardComponent } from './home-dashboard/home-dashboard.component';
-
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatCardModule } from '@angular/material/card';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { CommentFormComponent } from './comment-form/comment-form.component';
+import { StyleManagerService } from './services/style-manager.service';
+
+import { AppMaterialModule } from './app-material.module';
 
 
 @NgModule({
@@ -40,22 +33,15 @@ import { CommentFormComponent } from './comment-form/comment-form.component';
     CommentFormComponent,
   ],
   imports: [
+    AppMaterialModule,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
     FormsModule,
-    MatPaginatorModule,
-    MatToolbarModule,
-    MatCardModule,
-    MatGridListModule,
-    MatMenuModule,
-    MatIconModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
   ],
   providers: [
+    StyleManagerService,
     DataService,
     CommentsService,
     { provide: ErrorHandler, useClass: AppErrorHandler },

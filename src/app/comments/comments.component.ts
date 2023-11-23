@@ -14,7 +14,7 @@ export class CommentsPaginator extends MatPaginatorIntl {
 @Component({
   selector: 'comments',
   templateUrl: './comments.component.html',
-  styleUrls: ['./comments.component.css'],
+  styleUrls: ['./comments.component.scss'],
   providers: [{ provide: MatPaginatorIntl, useClass: CommentsPaginator }],
 })
 

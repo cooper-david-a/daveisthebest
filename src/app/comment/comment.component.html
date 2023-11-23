@@ -37,4 +37,4 @@
   ></comment>
 </mat-card>
 
-<comment-form *ngIf="replyFormShown" [closable]="true" (close)="closeReplyForm()"></comment-form>
+<comment-form *ngIf="replyFormShown" [parentCommentId]="commentObject.id" [closable]="true" (close)="closeReplyForm()"></comment-form>

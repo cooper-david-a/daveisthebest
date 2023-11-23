@@ -31,3 +31,9 @@ mat-card-content {
   background-position: center;
   flex-grow: 1;
 }
+
+@media (prefers-color-scheme: light) {
+  mat-card {
+    box-shadow: 5px 5px 10px;
+  }
+}
