@@ -1,0 +1,60 @@
+<div class="flex-container">
+  <section class="timer">
+    <mat-progress-bar mode="determinate" value="40"></mat-progress-bar>
+
+    <div class="controls">
+      <button mat-fab (click)="playPause()" color="primary">
+        <mat-icon>play_arrow</mat-icon>
+        <mat-icon *ngIf="running">pause</mat-icon>
+      </button>
+      <button mat-fab (click)="stop()" color="primary">
+        <mat-icon>stop</mat-icon>
+      </button>
+    </div>
+
+    <div class="clocks">
+      <p>Round: <span id="round">00:00.0</span></p>
+      <p>Remaining: <span id="remaining">00:00.0</span></p>
+      <p>Elapsed: <span id="elapsed">00:00.0</span></p>
+    </div>
+
+    <div class="schedule">
+      <div class="warmup_cooldown_box">
+        Warmup(s) <br />
+        <input type="number" id="warmup" value="60" />
+        <br />
+        Cooldown(s) <br />
+        <input type="number" id="cooldown" value="60" />
+      </div>
+
+      <div class="button-box">
+        <button mat-flat-button color="primary" (click)="addRow()">Add Row</button>
+        <button mat-flat-button color="primary" (click)="deleteRow()">Delete Row</button>
+        <button mat-flat-button color="primary" (click)="openTimer()">Open Timer</button>
+        <button mat-flat-button color="primary" (click)="saveTimer()" disabled>Save Timer</button>
+      </div>
+
+      <table mat-table [dataSource]="rows">
+
+        <ng-container matColumnDef="hard">
+          <th mat-header-cell *matHeaderCellDef>Hard</th>
+          <td mat-cell *matCellDef="let row">{{ row.hard }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="easy">
+          <th mat-header-cell *matHeaderCellDef>Easy</th>
+          <td mat-cell *matCellDef="let row">{{ row.easy }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="rounds">
+          <th mat-header-cell *matHeaderCellDef>Rounds</th>
+          <td mat-cell *matCellDef="let row">{{ row.rounds }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+      </table>
+    </div>
+  </section>
+</div>

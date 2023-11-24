@@ -6,14 +6,8 @@
   >
     <mat-icon>menu</mat-icon>
   </button>
-  <span>Dave Is The Best!?</span>
+  <a mat-button [routerLink]="['/']">Dave Is The Best!?</a>
   <span class="spacer"></span>
-  <button
-    mat-icon-button
-    class="example-icon favorite-icon"
-    aria-label="Example icon-button with heart icon"
-  >
-  </button>
   <button
     mat-icon-button
     class="example-icon"
@@ -22,6 +16,8 @@
     <mat-icon>share</mat-icon>
   </button>
 </mat-toolbar>
-<home></home>
+
+<router-outlet></router-outlet>
+
 <mat-divider></mat-divider>
 <comments></comments>
