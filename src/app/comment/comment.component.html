@@ -15,17 +15,22 @@
     <p>{{ commentObject.comment_text }}</p>
 
     <div class="reply-header">
-      <button mat-raised-button color=primary (click)="showReplyForm()"> Reply </button>
-      <span *ngIf="commentObject.replies.length > 0" (click)="showReplies()">
-        <mat-icon *ngIf="repliesHidden">keyboard_arrow_right</mat-icon>
-        <mat-icon *ngIf="!repliesHidden">keyboard_arrow_down</mat-icon>
-        {{
-          commentObject.replies.length > 1
-            ? commentObject.replies.length + " Replies"
-            : "1 Reply"
-        }}
-      </span>
+      <button mat-raised-button color="primary" (click)="showReplyForm()">
+        Reply
+      </button>
     </div>
+
+    <mat-divider *ngIf="commentObject.replies.length > 0"></mat-divider>
+
+    <span *ngIf="commentObject.replies.length > 0" (click)="showReplies()">
+      <mat-icon *ngIf="repliesHidden">keyboard_arrow_right</mat-icon>
+      <mat-icon *ngIf="!repliesHidden">keyboard_arrow_down</mat-icon>
+      {{
+        commentObject.replies.length > 1
+          ? commentObject.replies.length + " Replies"
+          : "1 Reply"
+      }}
+    </span>
   </mat-card-content>
 
   <comment
@@ -35,11 +40,14 @@
     [comments]="comments"
     [hidden]="repliesHidden"
   ></comment>
-</mat-card>
 
-<comment-form
-  *ngIf="replyFormShown"
-  [parentCommentId]="commentObject.id"
-  [closable]="true"
-  (close)="closeReplyForm()"
-></comment-form>
+  <mat-divider *ngIf="replyFormShown"></mat-divider>
+
+  <comment-form
+    *ngIf="replyFormShown"
+    [parentCommentId]="commentObject.id"
+    [closable]="true"
+    (close)="closeReplyForm()"
+  >
+  </comment-form>
+</mat-card>

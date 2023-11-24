@@ -1,19 +1,20 @@
 <div class="comments_container">
   <div class="header">
     <h2>Comments</h2>
+    <mat-divider></mat-divider>
     <comment-form></comment-form>
-
-    <mat-paginator
-      (page)="handlePageEvent($event)"
-      [length]="threads.length"
-      [pageSize]="pageSize"
-      [pageSizeOptions]="pageSizeOptions"
-      [pageIndex]="pageIndex"
-      [showFirstLastButtons]="true"
-      aria-label="Select page"
-    >
-    </mat-paginator>
   </div>
+
+  <mat-paginator
+    (page)="handlePageEvent($event)"
+    [length]="threads.length"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions"
+    [pageIndex]="pageIndex"
+    [showFirstLastButtons]="true"
+    aria-label="Select page"
+  >
+  </mat-paginator>
 
   <comment
     *ngFor="let commentId of pageContent"

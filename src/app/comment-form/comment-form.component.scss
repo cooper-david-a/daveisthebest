@@ -6,7 +6,7 @@ form {
   margin-bottom: 10px;
 }
 
-.name-field {
+.name-field, .post-button {
   width: 25%;
   min-width: 200px;
   max-width: 400px;
@@ -14,12 +14,6 @@ form {
 
 .comment-field {
   width: 100%;
-}
-
-.post-button {
-  width: 25%;
-  min-width: 200px;
-  max-width: 400px;
 }
 
 .close-button {
