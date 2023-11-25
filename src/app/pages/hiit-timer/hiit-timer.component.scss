@@ -1,9 +1,58 @@
-.flex-container {
+.container {
   margin: auto;
   max-width: 800px;
+  min-width: 300px;
   width: 100%;
+}
+
+.timer {
+  margin-top: 30px;
+  flex: 1 1 auto;
+}
+
+mat-progress-bar {
+  transform: scaleY(3);
+}
+
+.controls {
   display: flex;
+  flex-direction: row;
   justify-content: center;
+  gap: 5px;
+  margin: 5px 0 5px 0;
+  button {
+    flex: 0 1 50%;
+    height: fit-content;
+    mat-icon {
+      $icon-size: 75px;
+      font-size: $icon-size;
+      width: $icon-size;
+      height: $icon-size;
+    }
+  }
+}
+
+.clocks {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-areas:
+    "round round"
+    "elapsed remaining";
+  .round {
+    grid-area: round;
+    text-align: center;
+    font-size: 20vw;
+  }
+  .elapsed {
+    grid-area: elapsed;
+    text-align: center;
+    font-size: 6vw;
+  }
+  .remaining {
+    grid-area: remaining;
+    text-align: center;
+    font-size: 6vw;
+  }
 }
 
 .button-box {
@@ -13,13 +62,31 @@
   margin: 5px 0 5px 0;
 }
 
-.button-box button {
-  flex: 1 1 auto;
-  font-size: large;
+.button-box {
+  button {
+    flex: 1 0 20%;
+    font-size: large;
+  }
 }
 
-.timer {
-  flex: 1 1 auto;
+.warmup-cooldown-box {
+  display: flex;
+  gap: 5px;
+}
+
+.warmup-cooldown-box {
+  mat-form-field {
+    flex: 1 1 auto;
+  }
+}
+
+.warmup-cooldown-box {
+  mat-form-field {
+    * {
+      text-align: center;
+      font-size: x-large;
+    }
+  }
 }
 
 th,
@@ -28,8 +95,41 @@ td {
   text-align: center;
 }
 
-@media only screen and (max-width: 600px){
-    th, td {
-        font-size: x-large;
+@media only screen and (max-width: 600px) {
+  th,
+  td {
+    font-size: x-large;
+  }
+
+  .controls {
+    flex-direction: column;
+    button {
+      mat-icon {
+        $icon-size: 50px;
+        font-size: $icon-size;
+        width: $icon-size;
+        height: $icon-size;
+      }
     }
+  }
+
+  .button-box {
+    button {
+      font-size: medium;
+    }
+  }
+}
+
+@media only screen and (min-width: 800px) {
+  .clocks {
+    .round {
+      font-size: 160px;
+    }
+    .elapsed {
+      font-size: 48px;
+    }
+    .remaining {
+      font-size: 48px;
+    }
+  }
 }
