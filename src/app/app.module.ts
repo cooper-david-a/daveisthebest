@@ -14,7 +14,7 @@ import { CommentsComponent } from './comments/comments.component';
 import { CommentComponent } from './comment/comment.component';
 import { TimeSincePipe } from './pipes/time-since.pipe';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HomeDashboardComponent } from './home-dashboard/home-dashboard.component';
+import { HomeDashboardComponent } from './pages/home/home-dashboard/home-dashboard.component';
 import { CommentFormComponent } from './comment-form/comment-form.component';
 
 import { AppMaterialModule } from './app-material.module';

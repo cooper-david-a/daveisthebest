@@ -1,39 +1,27 @@
 import { Component, Input } from '@angular/core';
-
-import { Comments } from '../comments/comments.component';
+import { CommentsService, Comment } from '../services/comments.service';
 
 @Component({
   selector: 'comment',
   templateUrl: './comment.component.html',
-  styleUrls: ['./comment.component.scss']
+  styleUrls: ['./comment.component.scss'],
 })
 export class CommentComponent {
+  @Input() commentObject!: Comment;
+  repliesHidden = true;
+  replyFormShown = false;
 
-    @Input() commentObject!: Comment;
-    @Input() comments!: Comments;
-    repliesHidden = true;
-    replyFormShown = false;
+  constructor(public service: CommentsService){}
 
-    showReplies(){
-      this.repliesHidden = !this.repliesHidden;
-    }
+  showReplies() {
+    this.repliesHidden = !this.repliesHidden;
+  }
 
-    showReplyForm(){
-      this.replyFormShown = true;
-    }
+  showReplyForm() {
+    this.replyFormShown = true;
+  }
 
-    closeReplyForm(){
-      this.replyFormShown = false;
-    }
-
-}
-
-export interface Comment {
-  id: number;
-  ok_to_display: boolean;
-  date_entered: string;
-  commenter_name: string;
-  comment_text: string;
-  parent_comment: number | null;
-  replies: number[];
+  closeReplyForm() {
+    this.replyFormShown = false;
+  }
 }

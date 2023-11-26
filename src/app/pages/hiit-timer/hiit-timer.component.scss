@@ -1,12 +1,18 @@
+@use "@angular/material/theming" as theme;
+
 .container {
-  margin: auto;
+  margin: 5px auto 5px auto;
   max-width: 800px;
   min-width: 300px;
   width: 100%;
+  @include theme.mat-elevation(8);
+  padding: 5px;
+  border-radius: 5px;
 }
 
 .timer {
   margin-top: 30px;
+  margin-bottom: 30px;
   flex: 1 1 auto;
 }
 

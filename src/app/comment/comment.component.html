@@ -36,8 +36,7 @@
   <comment
     class="reply"
     *ngFor="let replyId of commentObject.replies"
-    [commentObject]="comments[replyId]"
-    [comments]="comments"
+    [commentObject]="service.comments[replyId]"
     [hidden]="repliesHidden"
   ></comment>
 
