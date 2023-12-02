@@ -78,16 +78,8 @@ mat-progress-bar {
 .warmup-cooldown-box {
   display: flex;
   gap: 5px;
-}
-
-.warmup-cooldown-box {
   mat-form-field {
     flex: 1 1 auto;
-  }
-}
-
-.warmup-cooldown-box {
-  mat-form-field {
     * {
       text-align: center;
       font-size: x-large;
@@ -95,18 +87,23 @@ mat-progress-bar {
   }
 }
 
-th,
-td {
-  font-size: xx-large;
-  text-align: center;
+mat-table {
+  mat-header-cell {
+    flex: 1 1 30%;
+    justify-content: center;
+  }
+  mat-cell {
+    flex: 1 1 auto;
+    justify-content: center;
+    padding: 5px;
+  }
+  * {
+    text-align: center;
+    font-size: x-large;
+  }
 }
 
 @media only screen and (max-width: 600px) {
-  th,
-  td {
-    font-size: x-large;
-  }
-
   .controls {
     flex-direction: column;
     button {
@@ -124,6 +121,12 @@ td {
       font-size: medium;
     }
   }
+
+  mat-table {
+  * {
+    font-size: large;
+  }
+}
 }
 
 @media only screen and (min-width: 800px) {

@@ -1,5 +1,4 @@
 import { ErrorHandler, NgModule } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -17,9 +16,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeDashboardComponent } from './pages/home/home-dashboard/home-dashboard.component';
 import { CommentFormComponent } from './comment-form/comment-form.component';
 
+
 import { AppMaterialModule } from './app-material.module';
 import { HiitTimerComponent } from './pages/hiit-timer/hiit-timer.component';
+import { HiitTimerOpenDialogComponent } from './pages/hiit-timer/hiit-timer-open-dialog/hiit-timer-open-dialog.component';
 import { ThermodynamicPropertyCalculatorComponent } from './pages/thermodynamic-property-calculator/thermodynamic-property-calculator.component';
+import { HiitTimerService } from './pages/hiit-timer/hiit-timer.service';
 
 @NgModule({
   declarations: [
@@ -31,6 +33,7 @@ import { ThermodynamicPropertyCalculatorComponent } from './pages/thermodynamic-
     HomeDashboardComponent,
     CommentFormComponent,
     HiitTimerComponent,
+    HiitTimerOpenDialogComponent,
     ThermodynamicPropertyCalculatorComponent,
   ],
   imports: [
@@ -45,6 +48,7 @@ import { ThermodynamicPropertyCalculatorComponent } from './pages/thermodynamic-
   providers: [
     DataService,
     CommentsService,
+    HiitTimerService,
     { provide: ErrorHandler, useClass: AppErrorHandler },
   ],
   bootstrap: [AppComponent],

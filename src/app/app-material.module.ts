@@ -12,6 +12,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 
 
@@ -30,6 +31,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatProgressBarModule,
     MatTableModule,
     MatDialogModule,
+    MatGridListModule,
   ],
 })
 export class AppMaterialModule {}

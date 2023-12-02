@@ -1,6 +1,6 @@
 <div class="container">
   <section class="timer">
-    <mat-progress-bar mode="determinate" value="40" ></mat-progress-bar>
+    <mat-progress-bar mode="determinate" value="40"></mat-progress-bar>
 
     <h1>Round 1 - Hard</h1>
 
@@ -24,11 +24,15 @@
       <div class="warmup-cooldown-box">
         <mat-form-field appearance="outline" subscriptSizing="dynamic">
           <mat-label>Warmup</mat-label>
-          <input matInput type="number" />
+          <input matInput type="number" [(ngModel)]="currentSchedule.warmup" />
         </mat-form-field>
         <mat-form-field appearance="outline" subscriptSizing="dynamic">
           <mat-label>Cooldown</mat-label>
-          <input matInput type="number" />
+          <input
+            matInput
+            type="number"
+            [(ngModel)]="currentSchedule.cooldown"
+          />
         </mat-form-field>
       </div>
 
@@ -52,25 +56,53 @@
         </button>
       </div>
 
-      <table mat-table [dataSource]="rows">
+      <mat-table [dataSource]="currentSchedule.rows">
+
         <ng-container matColumnDef="hard">
-          <th mat-header-cell *matHeaderCellDef>Hard</th>
-          <td mat-cell *matCellDef="let row">{{ row.hard }}</td>
+          <mat-header-cell *matHeaderCellDef> Hard </mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            <mat-form-field appearance="outline" subscriptSizing="dynamic">
+              <input
+                matInput
+                type="number"
+                [value]="row.hard"
+                [(ngModel)]="row.hard"
+              />
+            </mat-form-field>
+          </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="easy">
-          <th mat-header-cell *matHeaderCellDef>Easy</th>
-          <td mat-cell *matCellDef="let row">{{ row.easy }}</td>
+          <mat-header-cell *matHeaderCellDef> Easy </mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            <mat-form-field appearance="outline" subscriptSizing="dynamic">
+              <input
+                matInput
+                type="number"
+                [value]="row.easy"
+                [(ngModel)]="row.easy"
+              />
+            </mat-form-field>
+          </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="rounds">
-          <th mat-header-cell *matHeaderCellDef>Rounds</th>
-          <td mat-cell *matCellDef="let row">{{ row.rounds }}</td>
+          <mat-header-cell *matHeaderCellDef> Rounds </mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            <mat-form-field appearance="outline" subscriptSizing="dynamic">
+              <input
+                matInput
+                type="number"
+                [value]="row.rounds"
+                [(ngModel)]="row.rounds"
+              />
+            </mat-form-field>
+          </mat-cell>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      </table>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      </mat-table>
     </div>
   </section>
 </div>
