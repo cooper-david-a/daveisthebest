@@ -69,10 +69,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "DaveIsTheBest:build:production"
+              "buildTarget": "DaveIsTheBest:build:production"
             },
             "development": {
-              "browserTarget": "DaveIsTheBest:build:development"
+              "buildTarget": "DaveIsTheBest:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -80,7 +80,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "DaveIsTheBest:build"
+            "buildTarget": "DaveIsTheBest:build"
           }
         },
         "test": {
