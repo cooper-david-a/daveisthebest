@@ -26,22 +26,7 @@ export class HiitTimerComponent {
       validators: [Validators.min(0), Validators.required],
       nonNullable: true,
     }),
-    rows: new FormArray<FormGroup>([
-      new FormGroup({
-        hard: new FormControl<number>(0, {
-          validators: [Validators.required, Validators.min(0)],
-          nonNullable: true,
-        }),
-        easy: new FormControl<number>(0, {
-          validators: [Validators.required, Validators.min(0)],
-          nonNullable: true,
-        }),
-        rounds: new FormControl<number>(1, {
-          validators: [Validators.required, Validators.min(1)],
-          nonNullable: true,
-        }),
-      }),
-    ]),
+    rows: new FormArray([this.rowFactory()]),
   });
 
   running: boolean = false;
@@ -56,62 +41,49 @@ export class HiitTimerComponent {
   playPause() {}
   stop() {}
 
+  rowFactory() {
+    return new FormGroup({
+      hard: new FormControl<number>(0, {
+        validators: [Validators.required, Validators.min(0)],
+        nonNullable: true,
+      }),
+      easy: new FormControl<number>(0, {
+        validators: [Validators.required, Validators.min(0)],
+        nonNullable: true,
+      }),
+      rounds: new FormControl<number>(1, {
+        validators: [Validators.required, Validators.min(1)],
+        nonNullable: true,
+      }),
+    });
+  }
+
   get rows() {
-    return this.scheduleForm.controls.rows as FormArray;
+    return this.scheduleForm.controls.rows;
   }
 
-  addRow(
-    newRow = new FormGroup({
-      hard: new FormControl<number>(0, [
-        Validators.min(0),
-        Validators.required,
-      ]),
-      easy: new FormControl<number>(0, [
-        Validators.min(0),
-        Validators.required,
-      ]),
-      rounds: new FormControl<number>(1, [
-        Validators.min(1),
-        Validators.required,
-      ]),
-    })
-  ) {
+  addRow(update: boolean = false, newRow = this.rowFactory()) {
     this.rows.push(newRow);
-    this.table.renderRows();
+    if (update) this.table.renderRows();
   }
 
-  deleteRow() {
+  deleteRow(update: boolean = false) {
     const numRows = this.rows.length;
     if (numRows > 1) {
       this.rows.removeAt(numRows - 1);
-      this.table.renderRows();
+      if (update) this.table.renderRows();
     }
+  }
+
+  clearRows() {
+    while (this.rows.length > 1) this.deleteRow();
   }
 
   saveSchedule() {
     if (this.scheduleForm.valid) {
-      let formValue = this.scheduleForm.value;
-
-      let schedule = {
-        title: formValue.title ? formValue.title : '',
-        warmup: formValue.warmup ? formValue.warmup : 0,
-        cooldown: formValue.cooldown ? formValue.cooldown : 0,
-        rows: formValue.rows
-          ? formValue.rows.map(this.convertRowToObject)
-          : [{ hard: 0, easy: 0, rounds: 0 }],
-      };
-
-      this.service.saveSchedule(schedule);
+      this.service.saveSchedule(this.scheduleForm.getRawValue());
     }
   }
-
-  convertRowToObject(row: Row) {
-    return{
-    hard: row.hard ? row.hard : 0,
-    easy: row.easy ? row.easy : 0,
-    rounds: row.rounds ? row.rounds : 0
-    } as Row
-  };
 
   openSchedule() {
     const dialogRef = this.openScheduleDialog.open(
@@ -123,32 +95,16 @@ export class HiitTimerComponent {
 
     dialogRef.afterClosed().subscribe((schedule: Schedule) => {
       if (schedule) {
-        let numOldRows = this.rows.length;
-        let numNewRows = schedule.rows.length;
-        while (numNewRows != numOldRows) {
-          if (numNewRows > numOldRows) {
-            this.addRow();
-            numOldRows = this.rows.length;
-          }
-          if (numNewRows < numOldRows) {
-            this.deleteRow();
-            numOldRows = this.rows.length;
-          }
-        }
-
-        this.scheduleForm.setValue({
-          title: schedule.title,
-          warmup: schedule.warmup,
-          cooldown: schedule.cooldown,
-          rows: schedule.rows.map((row: Row) => ({
-            hard: row.hard,
-            easy: row.easy,
-            rounds: row.rounds,
-          })),
+        delete schedule.id;
+        delete schedule.profile;
+        this.clearRows();
+        schedule.rows.forEach((row, index) => {
+          delete row.id;
+          if (index >= this.rows.length) this.addRow();
         });
+        this.scheduleForm.setValue(schedule);
+        this.table.renderRows();
       }
     });
   }
 }
-
-
