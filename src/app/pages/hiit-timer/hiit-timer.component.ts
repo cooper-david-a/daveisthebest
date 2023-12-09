@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { MatDialog } from '@angular/material/dialog';
 import { MatTable } from '@angular/material/table';
@@ -13,18 +13,36 @@ import { HiitTimerService, Schedule, Row } from './hiit-timer.service';
   styleUrls: ['./hiit-timer.component.scss'],
 })
 export class HiitTimerComponent {
+  scheduleForm = new FormGroup({
+    warmup: new FormControl<number>(0, [
+      Validators.min(0),
+      Validators.required,
+    ]),
+    cooldown: new FormControl<number>(0, [
+      Validators.min(0),
+      Validators.required,
+    ]),
+    rows: new FormArray<FormGroup>([
+      new FormGroup({
+        hard: new FormControl<number>(0, [
+          Validators.required,
+          Validators.min(0),
+        ]),
+        easy: new FormControl<number>(0, [
+          Validators.required,
+          Validators.min(0),
+        ]),
+        rounds: new FormControl<number>(1, [
+          Validators.required,
+          Validators.min(1),
+        ]),
+      }),
+    ]),
+  });
+
   running: boolean = false;
   displayedColumns: string[] = ['hard', 'easy', 'rounds'];
   @ViewChild(MatTable) table!: MatTable<Row>;
-
-  currentSchedule: Schedule = {
-    id: 0,
-    profile: '',
-    title: 'default',
-    warmup: 0,
-    cooldown: 0,
-    rows: [{ id: 0, hard: 360, easy: 60, rounds: 10 }],
-  };
 
   constructor(
     public openTimerDialog: MatDialog,
@@ -34,14 +52,34 @@ export class HiitTimerComponent {
   playPause() {}
   stop() {}
 
-  addRow() {
-    this.currentSchedule.rows.push({ id: 0, hard: 60, easy: 60, rounds: 1 });
+  get rows() {
+    return this.scheduleForm.controls.rows as FormArray;
+  }
+
+  addRow(
+    newRow = new FormGroup({
+      hard: new FormControl<number>(0, [
+        Validators.min(0),
+        Validators.required,
+      ]),
+      easy: new FormControl<number>(0, [
+        Validators.min(0),
+        Validators.required,
+      ]),
+      rounds: new FormControl<number>(1, [
+        Validators.min(1),
+        Validators.required,
+      ]),
+    })
+  ) {
+    this.rows.push(newRow);
     this.table.renderRows();
   }
 
   deleteRow() {
-    if (this.currentSchedule.rows.length > 1) {
-      this.currentSchedule.rows.pop();
+    const numRows = this.rows.length;
+    if (numRows > 1) {
+      this.rows.removeAt(numRows - 1);
       this.table.renderRows();
     }
   }
@@ -54,7 +92,30 @@ export class HiitTimerComponent {
     });
 
     dialogRef.afterClosed().subscribe((schedule: Schedule) => {
-      if (schedule) this.currentSchedule = schedule;
+      if (schedule) {
+        let numOldRows = this.rows.length;
+        let numNewRows = schedule.rows.length;
+        while (numNewRows != numOldRows) {
+          if (numNewRows > numOldRows) {
+            this.addRow();
+            numOldRows = this.rows.length;
+          }
+          if (numNewRows < numOldRows) {
+            this.deleteRow();
+            numOldRows = this.rows.length;
+          }
+        }
+
+        this.scheduleForm.setValue({
+          warmup: schedule.warmup,
+          cooldown: schedule.cooldown,
+          rows: schedule.rows.map((row: Row) => ({
+            hard: row.hard,
+            easy: row.easy,
+            rounds: row.rounds,
+          })),
+        });
+      }
     });
   }
 }

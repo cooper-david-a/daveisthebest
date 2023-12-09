@@ -20,82 +20,70 @@
       </button>
     </div>
 
-    <div class="schedule">
+    <div class="button-box">
+      <button mat-flat-button color="primary" (click)="addRow()">
+        Add Row
+      </button>
+      <button mat-flat-button color="primary" (click)="deleteRow()">
+        Delete Row
+      </button>
+      <button mat-flat-button color="primary" (click)="openTimer()">
+        Open Timer
+      </button>
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="saveTimer()"
+        [disabled]="!scheduleForm.valid"
+      >
+        Save Timer
+      </button>
+    </div>
+
+    <form class="schedule" [formGroup]="scheduleForm">
       <div class="warmup-cooldown-box">
-        <mat-form-field appearance="outline" subscriptSizing="dynamic" floatLabel="always">
-          <mat-label>Warmup</mat-label>
-          <input matInput type="number" [(ngModel)]="currentSchedule.warmup" />
-        </mat-form-field>
-        <mat-form-field appearance="outline" subscriptSizing="dynamic" floatLabel="always">
-          <mat-label>Cooldown</mat-label>
-          <input
-            matInput
-            type="number"
-            [(ngModel)]="currentSchedule.cooldown"
-          />
-        </mat-form-field>
-      </div>
-
-      <div class="button-box">
-        <button mat-flat-button color="primary" (click)="addRow()">
-          Add Row
-        </button>
-        <button mat-flat-button color="primary" (click)="deleteRow()">
-          Delete Row
-        </button>
-        <button mat-flat-button color="primary" (click)="openTimer()">
-          Open Timer
-        </button>
-        <button
-          mat-flat-button
-          color="primary"
-          (click)="saveTimer()"
-          [disabled]="!form.valid()"
+        <mat-form-field
+          appearance="outline"
+          subscriptSizing="dynamic"
+          floatLabel="always"
         >
-          Save Timer
-        </button>
+          <mat-label>Warmup</mat-label>
+          <input matInput type="number" formControlName="warmup" />
+        </mat-form-field>
+        <mat-form-field
+          appearance="outline"
+          subscriptSizing="dynamic"
+          floatLabel="always"
+        >
+          <mat-label>Cooldown</mat-label>
+          <input matInput type="number" formControlName="cooldown" />
+        </mat-form-field>
       </div>
 
-      <mat-table [dataSource]="currentSchedule.rows">
-
+      <mat-table [dataSource]="rows.controls" formArrayName="rows">
         <ng-container matColumnDef="hard">
           <mat-header-cell *matHeaderCellDef> Hard </mat-header-cell>
-          <mat-cell *matCellDef="let row">
+          <mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
             <mat-form-field appearance="outline" subscriptSizing="dynamic">
-              <input
-                matInput
-                type="number"
-                [value]="row.hard"
-                [(ngModel)]="row.hard"
-              />
+              <input matInput type="number" formControlName="hard" />
             </mat-form-field>
           </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="easy">
           <mat-header-cell *matHeaderCellDef> Easy </mat-header-cell>
-          <mat-cell *matCellDef="let row">
+          <mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
             <mat-form-field appearance="outline" subscriptSizing="dynamic">
-              <input
-                matInput
-                type="number"
-                [value]="row.easy"
-                [(ngModel)]="row.easy"
-              />
+              <input matInput type="number" formControlName="easy" />
             </mat-form-field>
           </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="rounds">
           <mat-header-cell *matHeaderCellDef> Rounds </mat-header-cell>
-          <mat-cell *matCellDef="let row">
+          <mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
             <mat-form-field appearance="outline" subscriptSizing="dynamic">
-              <input
-                matInput
-                type="number"
-                [value]="row.rounds"
-                [(ngModel)]="row.rounds"
-              />
+              <input matInput type="number" formControlName="rounds" />
             </mat-form-field>
           </mat-cell>
         </ng-container>
@@ -103,6 +91,6 @@
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
       </mat-table>
-    </div>
+    </form>
   </section>
 </div>
