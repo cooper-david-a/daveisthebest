@@ -18,7 +18,7 @@ export class HiitTimerOpenDialogComponent implements OnInit {
   constructor(private service: HiitTimerService, public dialogRef: MatDialogRef<HiitTimerOpenDialogComponent>) {}
 
   ngOnInit(): void {
-    this.service.getTimers().subscribe((schedules) => {
+    this.service.getSchedules().subscribe((schedules) => {
       this.schedules = schedules;
       this.dataSource = new MatTableDataSource(schedules);
       this.isLoading = false;

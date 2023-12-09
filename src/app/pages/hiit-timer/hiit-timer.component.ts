@@ -14,28 +14,32 @@ import { HiitTimerService, Schedule, Row } from './hiit-timer.service';
 })
 export class HiitTimerComponent {
   scheduleForm = new FormGroup({
-    warmup: new FormControl<number>(0, [
-      Validators.min(0),
-      Validators.required,
-    ]),
-    cooldown: new FormControl<number>(0, [
-      Validators.min(0),
-      Validators.required,
-    ]),
+    title: new FormControl<string>('', {
+      validators: [Validators.required, Validators.maxLength(100)],
+      nonNullable: true,
+    }),
+    warmup: new FormControl<number>(0, {
+      validators: [Validators.min(0), Validators.required],
+      nonNullable: true,
+    }),
+    cooldown: new FormControl<number>(0, {
+      validators: [Validators.min(0), Validators.required],
+      nonNullable: true,
+    }),
     rows: new FormArray<FormGroup>([
       new FormGroup({
-        hard: new FormControl<number>(0, [
-          Validators.required,
-          Validators.min(0),
-        ]),
-        easy: new FormControl<number>(0, [
-          Validators.required,
-          Validators.min(0),
-        ]),
-        rounds: new FormControl<number>(1, [
-          Validators.required,
-          Validators.min(1),
-        ]),
+        hard: new FormControl<number>(0, {
+          validators: [Validators.required, Validators.min(0)],
+          nonNullable: true,
+        }),
+        easy: new FormControl<number>(0, {
+          validators: [Validators.required, Validators.min(0)],
+          nonNullable: true,
+        }),
+        rounds: new FormControl<number>(1, {
+          validators: [Validators.required, Validators.min(1)],
+          nonNullable: true,
+        }),
       }),
     ]),
   });
@@ -45,7 +49,7 @@ export class HiitTimerComponent {
   @ViewChild(MatTable) table!: MatTable<Row>;
 
   constructor(
-    public openTimerDialog: MatDialog,
+    public openScheduleDialog: MatDialog,
     private service: HiitTimerService
   ) {}
 
@@ -84,12 +88,38 @@ export class HiitTimerComponent {
     }
   }
 
-  saveTimer() {}
+  saveSchedule() {
+    if (this.scheduleForm.valid) {
+      let formValue = this.scheduleForm.value;
 
-  openTimer() {
-    const dialogRef = this.openTimerDialog.open(HiitTimerOpenDialogComponent, {
-      width: '80vw',
-    });
+      let schedule = {
+        title: formValue.title ? formValue.title : '',
+        warmup: formValue.warmup ? formValue.warmup : 0,
+        cooldown: formValue.cooldown ? formValue.cooldown : 0,
+        rows: formValue.rows
+          ? formValue.rows.map(this.convertRowToObject)
+          : [{ hard: 0, easy: 0, rounds: 0 }],
+      };
+
+      this.service.saveSchedule(schedule);
+    }
+  }
+
+  convertRowToObject(row: Row) {
+    return{
+    hard: row.hard ? row.hard : 0,
+    easy: row.easy ? row.easy : 0,
+    rounds: row.rounds ? row.rounds : 0
+    } as Row
+  };
+
+  openSchedule() {
+    const dialogRef = this.openScheduleDialog.open(
+      HiitTimerOpenDialogComponent,
+      {
+        width: '80vw',
+      }
+    );
 
     dialogRef.afterClosed().subscribe((schedule: Schedule) => {
       if (schedule) {
@@ -107,6 +137,7 @@ export class HiitTimerComponent {
         }
 
         this.scheduleForm.setValue({
+          title: schedule.title,
           warmup: schedule.warmup,
           cooldown: schedule.cooldown,
           rows: schedule.rows.map((row: Row) => ({
@@ -119,3 +150,5 @@ export class HiitTimerComponent {
     });
   }
 }
+
+

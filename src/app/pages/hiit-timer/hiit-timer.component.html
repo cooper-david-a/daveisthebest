@@ -27,13 +27,13 @@
       <button mat-flat-button color="primary" (click)="deleteRow()">
         Delete Row
       </button>
-      <button mat-flat-button color="primary" (click)="openTimer()">
+      <button mat-flat-button color="primary" (click)="openSchedule()">
         Open Timer
       </button>
       <button
         mat-flat-button
         color="primary"
-        (click)="saveTimer()"
+        (click)="saveSchedule()"
         [disabled]="!scheduleForm.valid"
       >
         Save Timer
@@ -41,20 +41,18 @@
     </div>
 
     <form class="schedule" [formGroup]="scheduleForm">
+
+      <mat-form-field class="title-text-area" appearance="fill" subscriptSizing="dynamic">
+        <mat-label>Title</mat-label>
+        <textarea matInput type="text" formControlName="title"></textarea>
+      </mat-form-field>
+
       <div class="warmup-cooldown-box">
-        <mat-form-field
-          appearance="outline"
-          subscriptSizing="dynamic"
-          floatLabel="always"
-        >
+        <mat-form-field appearance="fill" subscriptSizing="dynamic">
           <mat-label>Warmup</mat-label>
           <input matInput type="number" formControlName="warmup" />
         </mat-form-field>
-        <mat-form-field
-          appearance="outline"
-          subscriptSizing="dynamic"
-          floatLabel="always"
-        >
+        <mat-form-field appearance="fill" subscriptSizing="dynamic">
           <mat-label>Cooldown</mat-label>
           <input matInput type="number" formControlName="cooldown" />
         </mat-form-field>
@@ -93,4 +91,5 @@
       </mat-table>
     </form>
   </section>
+
 </div>

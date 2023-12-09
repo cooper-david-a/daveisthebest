@@ -75,6 +75,11 @@ mat-progress-bar {
   }
 }
 
+.title-text-area {
+  width: 100%;
+  margin-bottom: 5px;
+}
+
 .warmup-cooldown-box {
   display: flex;
   gap: 5px;
@@ -123,10 +128,10 @@ mat-table {
   }
 
   mat-table {
-  * {
-    font-size: large;
+    * {
+      font-size: large;
+    }
   }
-}
 }
 
 @media only screen and (min-width: 800px) {

@@ -25,7 +25,7 @@ export class DataService {
 
   create(resource: Object): Observable<Object> {
     return this.http
-      .post(this.url, JSON.stringify(resource))
+      .post(this.url, resource)
       .pipe(catchError(this.handleError));
   }
 

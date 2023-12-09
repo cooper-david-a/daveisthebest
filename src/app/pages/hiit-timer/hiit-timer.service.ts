@@ -6,10 +6,10 @@ import { Observable, map } from 'rxjs';
 import { DataService } from '../../services/data.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class HiitTimerService {
-  url: string = 'http://localhost:8000/hiit-timer/schedules';
+  url: string = 'http://localhost:8000/hiit-timer/schedules/';
   private dataService: DataService;
   timers!: Schedule[];
 
@@ -17,26 +17,29 @@ export class HiitTimerService {
     this.dataService = new DataService(this.url, http);
   }
 
-  getTimers(): Observable<Schedule[]> {
+  getSchedules(): Observable<Schedule[]> {
     return this.dataService
       .getAll()
-      .pipe(map((response) => response as Schedule[]))
+      .pipe(map((response) => response as Schedule[]));
   }
 
+  saveSchedule(schedule: Schedule) {
+    this.dataService.create(schedule).subscribe((data)=>console.log(data));
+  }
 }
 
 export interface Schedule {
-  id:number,
-  profile:string,
-  title:string,
-  warmup:number,
-  cooldown:number,
-  rows:Row[]
+  id?: number;
+  profile?: string;
+  title: string;
+  warmup: number;
+  cooldown: number;
+  rows: Row[];
 }
 
 export interface Row {
-  id:number,
-  hard:number,
-  easy:number,
-  rounds:number
+  id?: number;
+  hard: number;
+  easy: number;
+  rounds: number;
 }
