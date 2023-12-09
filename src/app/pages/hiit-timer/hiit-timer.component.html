@@ -22,11 +22,11 @@
 
     <div class="schedule">
       <div class="warmup-cooldown-box">
-        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-form-field appearance="outline" subscriptSizing="dynamic" floatLabel="always">
           <mat-label>Warmup</mat-label>
           <input matInput type="number" [(ngModel)]="currentSchedule.warmup" />
         </mat-form-field>
-        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-form-field appearance="outline" subscriptSizing="dynamic" floatLabel="always">
           <mat-label>Cooldown</mat-label>
           <input
             matInput
@@ -50,7 +50,7 @@
           mat-flat-button
           color="primary"
           (click)="saveTimer()"
-          [disabled]="!readyToSave"
+          [disabled]="!form.valid()"
         >
           Save Timer
         </button>

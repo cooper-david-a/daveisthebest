@@ -1,0 +1,11 @@
+@use "@angular/material/theming" as theme;
+
+.spinner-box {
+  display: flex;
+  justify-content: center;
+}
+
+.mat-mdc-row:hover {
+  @include theme.mat-elevation(10);
+  cursor: pointer;
+}

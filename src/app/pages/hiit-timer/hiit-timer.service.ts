@@ -27,7 +27,7 @@ export class HiitTimerService {
 
 export interface Schedule {
   id:number,
-  profile:number,
+  profile:string,
   title:string,
   warmup:number,
   cooldown:number,

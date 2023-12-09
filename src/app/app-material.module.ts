@@ -13,6 +13,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 
@@ -32,6 +33,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
     MatTableModule,
     MatDialogModule,
     MatGridListModule,
+    MatProgressSpinnerModule,
   ],
 })
 export class AppMaterialModule {}
