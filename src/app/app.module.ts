@@ -15,6 +15,7 @@ import { TimeSincePipe } from './pipes/time-since.pipe';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeDashboardComponent } from './pages/home/home-dashboard/home-dashboard.component';
 import { CommentFormComponent } from './comment-form/comment-form.component';
+import { StopwatchPipe } from './pipes/stopwatch.pipe';
 
 
 import { AppMaterialModule } from './app-material.module';
@@ -35,6 +36,7 @@ import { HiitTimerService } from './pages/hiit-timer/hiit-timer.service';
     HiitTimerComponent,
     HiitTimerOpenDialogComponent,
     ThermodynamicPropertyCalculatorComponent,
+    StopwatchPipe,
   ],
   imports: [
     AppMaterialModule,

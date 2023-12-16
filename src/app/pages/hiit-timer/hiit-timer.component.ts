@@ -29,17 +29,22 @@ export class HiitTimerComponent {
     rows: new FormArray([this.rowFactory()]),
   });
 
-  running: boolean = false;
-  displayedColumns: string[] = ['hard', 'easy', 'rounds'];
+  running = false;
+  startTime!: number;
+  timeRemaining = 0;
+  totalTime = 0;
+  timeElapsed = 0;
+  roundTimeRemaining = 0;
+  elapsedTimeBreakpointArray: number[] = [];
+  timer!: NodeJS.Timeout;
+
+  displayedColumns = ['hard', 'easy', 'rounds'];
   @ViewChild(MatTable) table!: MatTable<Row>;
 
   constructor(
     public openScheduleDialog: MatDialog,
     private service: HiitTimerService
   ) {}
-
-  playPause() {}
-  stop() {}
 
   rowFactory() {
     return new FormGroup({
@@ -97,14 +102,71 @@ export class HiitTimerComponent {
       if (schedule) {
         delete schedule.id;
         delete schedule.profile;
-        this.clearRows();
-        schedule.rows.forEach((row, index) => {
-          delete row.id;
-          if (index >= this.rows.length) this.addRow();
-        });
+        while (schedule.rows.length < this.rows.length) this.deleteRow();
+        while (schedule.rows.length > this.rows.length) this.addRow();
+        schedule.rows.forEach((row) => delete row.id);
         this.scheduleForm.setValue(schedule);
         this.table.renderRows();
+        this.generateTimer();
       }
     });
   }
+
+  generateTimer() {
+    if (
+      this.scheduleForm.controls.warmup.valid &&
+      this.scheduleForm.controls.rows.valid &&
+      this.scheduleForm.controls.cooldown.valid
+    ) {
+      let schedule = this.scheduleForm.getRawValue();
+
+      this.elapsedTimeBreakpointArray = [];
+      if (schedule.warmup) this.elapsedTimeBreakpointArray[0] = schedule.warmup;
+      for (let row of schedule.rows) {
+        for (let i = 0; i < row.rounds; i++)
+          this.elapsedTimeBreakpointArray.push(row.hard, row.easy);
+      }
+      if (schedule.cooldown)
+        this.elapsedTimeBreakpointArray.push(schedule.cooldown);
+      this.elapsedTimeBreakpointArray = this.elapsedTimeBreakpointArray.map(
+        (
+          (sum) => (value) =>
+            (sum += value)
+        )(0)
+      );
+
+      this.timeRemaining =
+        this.elapsedTimeBreakpointArray[
+          this.elapsedTimeBreakpointArray.length - 1
+        ];
+
+      this.totalTime = this.timeRemaining;
+      this.roundTimeRemaining = this.elapsedTimeBreakpointArray[0];
+    }
+  }
+
+  playPause() {
+    if (this.running) this.pause();
+    if (!this.running) this.play();
+  }
+
+  play() {
+    this.running = true;
+    this.startTime = new Date().getTime();
+    this.timer = setInterval(()=>this.updateTimer(),100);
+  }
+
+  pause() {}
+
+  updateTimer() {
+    let now = new Date().getTime();
+    this.timeElapsed = (now - this.startTime) / 1000;
+    this.timeRemaining = this.totalTime - this.timeElapsed;
+    let roundIndex =
+      this.elapsedTimeBreakpointArray.findIndex((t) => t > this.timeElapsed);
+    this.roundTimeRemaining =
+      this.elapsedTimeBreakpointArray[roundIndex] - this.timeElapsed;
+  }
+
+  stop() {}
 }

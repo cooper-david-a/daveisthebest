@@ -5,14 +5,16 @@
     <h1>Round 1 - Hard</h1>
 
     <div class="clocks">
-      <div class="round">00:00.0</div>
-      <div class="elapsed">Elapsed<br />00:00.0</div>
-      <div class="remaining">Remaining<br />00:00.0</div>
+      <div class="round">{{ roundTimeRemaining | stopwatch }}</div>
+      <div class="elapsed">Elapsed<br />{{ timeElapsed | stopwatch }}</div>
+      <div class="remaining">
+        Remaining<br />{{ timeRemaining | stopwatch }}
+      </div>
     </div>
 
     <div class="controls">
       <button mat-flat-button (click)="playPause()" color="primary">
-        <mat-icon>play_arrow</mat-icon>
+        <mat-icon *ngIf="!running">play_arrow</mat-icon>
         <mat-icon *ngIf="running">pause</mat-icon>
       </button>
       <button mat-flat-button (click)="stop()" color="primary">
@@ -40,9 +42,12 @@
       </button>
     </div>
 
-    <form class="schedule" [formGroup]="scheduleForm">
-
-      <mat-form-field class="title-text-area" appearance="fill" subscriptSizing="dynamic">
+    <form class="schedule" [formGroup]="scheduleForm" (change)="generateTimer()">
+      <mat-form-field
+        class="title-text-area"
+        appearance="fill"
+        subscriptSizing="dynamic"
+      >
         <mat-label>Title</mat-label>
         <textarea matInput type="text" formControlName="title"></textarea>
       </mat-form-field>
@@ -91,5 +96,4 @@
       </mat-table>
     </form>
   </section>
-
 </div>
