@@ -34,9 +34,13 @@ export class HiitTimerComponent {
   timeRemaining = 0;
   totalTime = 0;
   timeElapsed = 0;
+  savedTimeElapsed = 0;
   roundTimeRemaining = 0;
   elapsedTimeBreakpointArray: number[] = [];
+  roundIndex = 0;
   timer!: NodeJS.Timeout;
+  progress = 0;
+  bell = new Audio('../assets/Bell.wav');
 
   displayedColumns = ['hard', 'easy', 'rounds'];
   @ViewChild(MatTable) table!: MatTable<Row>;
@@ -142,31 +146,50 @@ export class HiitTimerComponent {
 
       this.totalTime = this.timeRemaining;
       this.roundTimeRemaining = this.elapsedTimeBreakpointArray[0];
+      this.timeElapsed = 0;
     }
   }
 
   playPause() {
-    if (this.running) this.pause();
-    if (!this.running) this.play();
+    this.running = !this.running;
+    if (!this.running) this.pause();
+    if (this.running) this.play();
   }
 
   play() {
-    this.running = true;
+    this.bell.play();
     this.startTime = new Date().getTime();
-    this.timer = setInterval(()=>this.updateTimer(),100);
+    this.timer = setInterval(() => this.update(), 100);
   }
 
-  pause() {}
-
-  updateTimer() {
-    let now = new Date().getTime();
-    this.timeElapsed = (now - this.startTime) / 1000;
-    this.timeRemaining = this.totalTime - this.timeElapsed;
-    let roundIndex =
-      this.elapsedTimeBreakpointArray.findIndex((t) => t > this.timeElapsed);
-    this.roundTimeRemaining =
-      this.elapsedTimeBreakpointArray[roundIndex] - this.timeElapsed;
+  pause() {
+    clearInterval(this.timer);
+    this.savedTimeElapsed = this.timeElapsed;
   }
 
-  stop() {}
+  update() {
+    if (this.running) {
+      let oldRoundIndex = this.roundIndex;
+      let now = new Date().getTime();
+      this.timeElapsed = this.savedTimeElapsed + (now - this.startTime) / 1000;
+      this.timeRemaining = this.totalTime - this.timeElapsed;
+      this.roundIndex = this.elapsedTimeBreakpointArray.findIndex(
+        (t) => t > this.timeElapsed
+      );
+      if (this.roundIndex > oldRoundIndex) this.bell.play();
+      this.roundTimeRemaining =
+        this.elapsedTimeBreakpointArray[this.roundIndex] - this.timeElapsed;
+      this.progress = (this.timeElapsed / this.totalTime) * 100;
+      if (this.roundIndex < 0) {
+        this.bell.play();
+        this.stop();
+      }
+    }
+  }
+
+  stop() {
+    clearInterval(this.timer);
+    this.running = false;
+    this.generateTimer();
+  }
 }
