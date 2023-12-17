@@ -18,8 +18,16 @@ export class HiitTimerComponent {
       validators: [Validators.required, Validators.maxLength(100)],
       nonNullable: true,
     }),
+    warmupDescription: new FormControl<string>('Warmup', {
+      validators: [Validators.required, Validators.maxLength(100)],
+      nonNullable: true,
+    }),
     warmup: new FormControl<number>(0, {
       validators: [Validators.min(0), Validators.required],
+      nonNullable: true,
+    }),
+    cooldownDescription: new FormControl<string>('Cooldown', {
+      validators: [Validators.required, Validators.maxLength(100)],
       nonNullable: true,
     }),
     cooldown: new FormControl<number>(0, {
@@ -28,6 +36,8 @@ export class HiitTimerComponent {
     }),
     rows: new FormArray([this.rowFactory()]),
   });
+
+  warmupCooldownDescShown = false;
 
   running = false;
   startTime!: number;
@@ -43,6 +53,7 @@ export class HiitTimerComponent {
   bell = new Audio('../assets/Bell.wav');
 
   displayedColumns = ['hard', 'easy', 'rounds'];
+  expandedColumns = [...this.displayedColumns, 'descriptions'];
   @ViewChild(MatTable) table!: MatTable<Row>;
 
   constructor(
@@ -52,8 +63,16 @@ export class HiitTimerComponent {
 
   rowFactory() {
     return new FormGroup({
+      hardDescription: new FormControl<string>('Hard', {
+        validators: [Validators.required, Validators.maxLength(100)],
+        nonNullable: true,
+      }),
       hard: new FormControl<number>(0, {
         validators: [Validators.required, Validators.min(0)],
+        nonNullable: true,
+      }),
+      easyDescription: new FormControl<string>('Easy', {
+        validators: [Validators.required, Validators.maxLength(100)],
         nonNullable: true,
       }),
       easy: new FormControl<number>(0, {

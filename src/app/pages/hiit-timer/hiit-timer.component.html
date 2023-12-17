@@ -42,7 +42,11 @@
       </button>
     </div>
 
-    <form class="schedule" [formGroup]="scheduleForm" (change)="generateTimer()">
+    <form
+      class="schedule"
+      [formGroup]="scheduleForm"
+      (change)="generateTimer()"
+    >
       <mat-form-field
         class="title-text-area"
         appearance="fill"
@@ -53,14 +57,49 @@
       </mat-form-field>
 
       <div class="warmup-cooldown-box">
-        <mat-form-field appearance="fill" subscriptSizing="dynamic">
-          <mat-label>Warmup</mat-label>
-          <input matInput type="number" formControlName="warmup" />
-        </mat-form-field>
-        <mat-form-field appearance="fill" subscriptSizing="dynamic">
-          <mat-label>Cooldown</mat-label>
-          <input matInput type="number" formControlName="cooldown" />
-        </mat-form-field>
+        <div class="durations">
+          <mat-form-field appearance="fill" subscriptSizing="dynamic">
+            <mat-label>Warmup</mat-label>
+            <input matInput type="number" formControlName="warmup" />
+          </mat-form-field>
+          <div
+            (click)="warmupCooldownDescShown = !warmupCooldownDescShown"
+            class="expand-button"
+          >
+            @if(warmupCooldownDescShown){<mat-icon>expand_less</mat-icon>}@else{<mat-icon>expand_more</mat-icon>}
+          </div>
+          <mat-form-field appearance="fill" subscriptSizing="dynamic">
+            <mat-label>Cooldown</mat-label>
+            <input matInput type="number" formControlName="cooldown" />
+          </mat-form-field>
+        </div>
+        <div class="descriptions" [hidden]="!warmupCooldownDescShown">
+          <mat-form-field
+            class="title-text-area"
+            appearance="fill"
+            subscriptSizing="dynamic"
+          >
+            <mat-label>Warmup Description</mat-label>
+            <textarea
+              matInput
+              type="text"
+              formControlName="warmupDescription"
+            ></textarea>
+          </mat-form-field>
+
+          <mat-form-field
+            class="title-text-area"
+            appearance="fill"
+            subscriptSizing="dynamic"
+          >
+            <mat-label>Cooldown Description</mat-label>
+            <textarea
+              matInput
+              type="text"
+              formControlName="cooldownDescription"
+            ></textarea>
+          </mat-form-field>
+        </div>
       </div>
 
       <mat-table [dataSource]="rows.controls" formArrayName="rows">

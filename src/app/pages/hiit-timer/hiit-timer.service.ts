@@ -24,7 +24,7 @@ export class HiitTimerService {
   }
 
   saveSchedule(schedule: Schedule) {
-    this.dataService.create(schedule).subscribe((data)=>console.log(data));
+    this.dataService.create(schedule).subscribe((data) => console.log(data));
   }
 }
 
@@ -32,14 +32,18 @@ export interface Schedule {
   id?: number;
   profile?: string;
   title: string;
+  warmupDescription: string;
   warmup: number;
+  cooldownDescription: string;
   cooldown: number;
   rows: Row[];
 }
 
 export interface Row {
   id?: number;
+  hardDescription: string;
   hard: number;
+  easyDescription: string;
   easy: number;
   rounds: number;
 }
