@@ -85,16 +85,16 @@ mat-progress-bar {
   gap: 5px;
   flex-direction: column;
   div.durations {
-    display:flex;
-    gap:5px;
-    div.expand-button{
-      display:flex;
+    display: flex;
+    gap: 5px;
+    div.expand-button {
+      display: flex;
       align-items: center;
       cursor: pointer;
     }
     mat-form-field {
-      flex:1 1 50%;
-      *{
+      flex: 1 1 50%;
+      * {
         text-align: center;
         font-size: x-large;
       }
@@ -107,11 +107,32 @@ mat-table {
     flex: 1 1 30%;
     justify-content: center;
   }
+  mat-header-cell.mat-column-expand {
+    flex: 1 1 5%;
+  }
   mat-cell {
     flex: 1 1 auto;
     justify-content: center;
     padding: 5px;
   }
+  mat-cell.mat-column-expand {
+    flex: 1 1 5%;
+  }
+  mat-row.descriptions {
+    mat-cell {
+      flex-wrap: wrap;
+      mat-form-field {
+        flex: 1 1 50%;
+      }
+    }
+  }
+
+  mat-row.collapsed {
+    height: 0;
+    min-height: 0;
+    display: none;
+  }
+
   * {
     text-align: center;
     font-size: x-large;

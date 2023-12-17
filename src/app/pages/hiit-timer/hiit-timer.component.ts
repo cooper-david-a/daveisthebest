@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { MatDialog } from '@angular/material/dialog';
@@ -12,7 +12,7 @@ import { HiitTimerService, Schedule, Row } from './hiit-timer.service';
   templateUrl: './hiit-timer.component.html',
   styleUrls: ['./hiit-timer.component.scss'],
 })
-export class HiitTimerComponent {
+export class HiitTimerComponent implements OnInit{
   scheduleForm = new FormGroup({
     title: new FormControl<string>('', {
       validators: [Validators.required, Validators.maxLength(100)],
@@ -46,14 +46,15 @@ export class HiitTimerComponent {
   timeElapsed = 0;
   savedTimeElapsed = 0;
   roundTimeRemaining = 0;
+  flatRoundsArray: Round[] = [];
   elapsedTimeBreakpointArray: number[] = [];
   roundIndex = 0;
   timer!: NodeJS.Timeout;
   progress = 0;
   bell = new Audio('../assets/Bell.wav');
 
-  displayedColumns = ['hard', 'easy', 'rounds'];
-  expandedColumns = [...this.displayedColumns, 'descriptions'];
+  displayedColumns = ['expand', 'hard', 'easy', 'rounds'];
+  expandedRowIndex!: number | null;
   @ViewChild(MatTable) table!: MatTable<Row>;
 
   constructor(
@@ -61,13 +62,17 @@ export class HiitTimerComponent {
     private service: HiitTimerService
   ) {}
 
+  ngOnInit(): void {
+    this.generateTimer();
+  }
+
   rowFactory() {
     return new FormGroup({
       hardDescription: new FormControl<string>('Hard', {
         validators: [Validators.required, Validators.maxLength(100)],
         nonNullable: true,
       }),
-      hard: new FormControl<number>(0, {
+      hard: new FormControl<number>(60, {
         validators: [Validators.required, Validators.min(0)],
         nonNullable: true,
       }),
@@ -75,7 +80,7 @@ export class HiitTimerComponent {
         validators: [Validators.required, Validators.maxLength(100)],
         nonNullable: true,
       }),
-      easy: new FormControl<number>(0, {
+      easy: new FormControl<number>(60, {
         validators: [Validators.required, Validators.min(0)],
         nonNullable: true,
       }),
@@ -123,6 +128,7 @@ export class HiitTimerComponent {
 
     dialogRef.afterClosed().subscribe((schedule: Schedule) => {
       if (schedule) {
+        console.log(schedule);
         delete schedule.id;
         delete schedule.profile;
         while (schedule.rows.length < this.rows.length) this.deleteRow();
@@ -143,29 +149,49 @@ export class HiitTimerComponent {
     ) {
       let schedule = this.scheduleForm.getRawValue();
 
+      this.flatRoundsArray = [];
       this.elapsedTimeBreakpointArray = [];
-      if (schedule.warmup) this.elapsedTimeBreakpointArray[0] = schedule.warmup;
-      for (let row of schedule.rows) {
-        for (let i = 0; i < row.rounds; i++)
-          this.elapsedTimeBreakpointArray.push(row.hard, row.easy);
+
+      if (schedule.warmup) {
+        this.flatRoundsArray[0] = {
+          description: schedule.warmupDescription,
+          duration: schedule.warmup,
+        };
       }
-      if (schedule.cooldown)
-        this.elapsedTimeBreakpointArray.push(schedule.cooldown);
-      this.elapsedTimeBreakpointArray = this.elapsedTimeBreakpointArray.map(
-        (
-          (sum) => (value) =>
-            (sum += value)
-        )(0)
-      );
+      for (let row of schedule.rows) {
+        for (let i = 0; i < row.rounds; i++) {
+          this.flatRoundsArray.push({
+            description: row.hardDescription,
+            duration: row.hard,
+          });
+          this.flatRoundsArray.push({
+            description: row.easyDescription,
+            duration: row.easy,
+          });
+        }
+        if (schedule.cooldown) {
+          this.flatRoundsArray.push({
+            description: schedule.cooldownDescription,
+            duration: schedule.cooldown,
+          });
+        }
 
-      this.timeRemaining =
-        this.elapsedTimeBreakpointArray[
-          this.elapsedTimeBreakpointArray.length - 1
-        ];
+        this.elapsedTimeBreakpointArray = this.flatRoundsArray.map(
+          (
+            (sum) => (round) =>
+              (sum += round.duration)
+          )(0)
+        );
 
-      this.totalTime = this.timeRemaining;
-      this.roundTimeRemaining = this.elapsedTimeBreakpointArray[0];
-      this.timeElapsed = 0;
+        this.timeRemaining =
+          this.elapsedTimeBreakpointArray[
+            this.elapsedTimeBreakpointArray.length - 1
+          ];
+
+        this.totalTime = this.timeRemaining;
+        this.roundTimeRemaining = this.elapsedTimeBreakpointArray[0];
+        this.timeElapsed = 0;
+      }
     }
   }
 
@@ -197,7 +223,7 @@ export class HiitTimerComponent {
       );
       if (this.roundIndex > oldRoundIndex) this.bell.play();
       this.roundTimeRemaining =
-        this.elapsedTimeBreakpointArray[this.roundIndex] - this.timeElapsed;
+        this.flatRoundsArray[this.roundIndex].duration - this.timeElapsed;
       this.progress = (this.timeElapsed / this.totalTime) * 100;
       if (this.roundIndex < 0) {
         this.bell.play();
@@ -209,6 +235,12 @@ export class HiitTimerComponent {
   stop() {
     clearInterval(this.timer);
     this.running = false;
+    this.roundIndex = 0;
     this.generateTimer();
   }
+}
+
+interface Round {
+  description: string;
+  duration: number;
 }
