@@ -2,17 +2,17 @@
   <mat-card-header>
     <mat-card-title>
       {{
-        commentObject.commenter_name
-          ? commentObject.commenter_name
+        commentObject.commenterName
+          ? commentObject.commenterName
           : "Anonomous"
       }}
       -
-      {{ commentObject.date_entered | timeSince }}
+      {{ commentObject.dateEntered | timeSince }}
     </mat-card-title>
   </mat-card-header>
 
   <mat-card-content>
-    <p>{{ commentObject.comment_text }}</p>
+    <p>{{ commentObject.commentText }}</p>
 
     <div class="reply-header">
       <button mat-raised-button color="primary" (click)="showReplyForm()">

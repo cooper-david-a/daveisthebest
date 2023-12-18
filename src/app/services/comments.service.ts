@@ -30,7 +30,7 @@ export class CommentsService {
     comments.forEach((comment) => {
       Object.assign(commentsObject, { [comment.id]: comment });
 
-      if (!comment.parent_comment) this.threads.push(comment.id);
+      if (!comment.parentComment) this.threads.push(comment.id);
     });
 
     this.comments = commentsObject;
@@ -39,11 +39,11 @@ export class CommentsService {
 
 export interface Comment {
   id: number;
-  ok_to_display: boolean;
-  date_entered: string;
-  commenter_name: string;
-  comment_text: string;
-  parent_comment: number | null;
+  okToDisplay: boolean;
+  dateEntered: string;
+  commenterName: string;
+  commentText: string;
+  parentComment: number | null;
   replies: number[];
 }
 
