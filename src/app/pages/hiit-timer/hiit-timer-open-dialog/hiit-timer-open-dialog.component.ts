@@ -11,7 +11,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 export class HiitTimerOpenDialogComponent implements OnInit {
   schedules!: Schedule[];
   dataSource!: MatTableDataSource<Schedule>;
-  displayedColumns: string[] = ['author', 'title'];
+  displayedColumns: string[] = ['creator', 'title'];
   isLoading = true;
   selectedSchedule = new EventEmitter();
 

@@ -23,6 +23,8 @@ import { HiitTimerComponent } from './pages/hiit-timer/hiit-timer.component';
 import { HiitTimerOpenDialogComponent } from './pages/hiit-timer/hiit-timer-open-dialog/hiit-timer-open-dialog.component';
 import { ThermodynamicPropertyCalculatorComponent } from './pages/thermodynamic-property-calculator/thermodynamic-property-calculator.component';
 import { HiitTimerService } from './pages/hiit-timer/hiit-timer.service';
+import { AuthService } from './services/auth.service';
+import { LoginFormComponent } from './login-form/login-form.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +39,7 @@ import { HiitTimerService } from './pages/hiit-timer/hiit-timer.service';
     HiitTimerOpenDialogComponent,
     ThermodynamicPropertyCalculatorComponent,
     StopwatchPipe,
+    LoginFormComponent,
   ],
   imports: [
     AppMaterialModule,
@@ -52,6 +55,7 @@ import { HiitTimerService } from './pages/hiit-timer/hiit-timer.service';
     DataService,
     CommentsService,
     HiitTimerService,
+    AuthService,
     { provide: ErrorHandler, useClass: AppErrorHandler },
   ],
   bootstrap: [AppComponent],

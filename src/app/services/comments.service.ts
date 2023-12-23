@@ -9,13 +9,13 @@ import { DataService } from './data.service';
   providedIn: 'root',
 })
 export class CommentsService {
-  url: string = 'http://localhost:8000/comments/';
   private dataService: DataService;
   comments!: Comments;
   threads: number[] = [];
+  relativeRoute = 'comments/';
 
   constructor(http: HttpClient) {
-    this.dataService = new DataService(this.url, http);
+    this.dataService = new DataService(this.relativeRoute, http);
   }
 
   getComments(): Observable<void> {

@@ -1,0 +1,47 @@
+<div class="form-box">
+  <form [formGroup]="loginForm">
+
+    <mat-form-field appearance="fill" class="username">
+      <mat-label>Username</mat-label>
+      <input matInput name="username" formControlName="username" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="email">
+      <mat-label>Email</mat-label>
+      <input matInput name="email" formControlName="email"
+    /></mat-form-field>
+
+    <mat-form-field appearance="fill" class="password">
+      <mat-label>Password</mat-label>
+      <input matInput name="password" formControlName="password" />
+    </mat-form-field>
+
+    @if(needToRegister){
+    <mat-form-field appearance="fill" class="confirm-password">
+      <mat-label>Confirm Password</mat-label>
+      <input
+        matInput
+        name="confirmPassword"
+        formControlName="confirmPassword"
+      />
+    </mat-form-field>
+    }
+
+    <button
+      class="login-button"
+      mat-raised-button
+      color="primary"
+    >
+      @if (needToRegister){ Register } @else { Login }
+    </button>
+
+    <button
+      class="need-to-register-button"
+      mat-raised-button
+      color="primary"
+      (click)="registerOrLogin()"
+    >
+      @if (needToRegister){ I have an account. } @else { I need an account. }
+    </button>
+  </form>
+</div>

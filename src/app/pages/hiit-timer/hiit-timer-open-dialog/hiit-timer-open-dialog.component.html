@@ -15,9 +15,9 @@
     <table mat-table [dataSource]="dataSource" matSort>
 
       <!-- Author Column -->
-      <ng-container matColumnDef="author">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Author</th>
-        <td mat-cell *matCellDef="let schedule">{{ schedule.profile }}</td>
+      <ng-container matColumnDef="creator">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Creator</th>
+        <td mat-cell *matCellDef="let schedule">{{ schedule.scheduleCreator }}</td>
       </ng-container>
 
       <!-- Title Column -->
@@ -40,7 +40,7 @@
     @if (schedules.length > 10) {
     <mat-paginator
       [pageSizeOptions]="[10, 25, 50]"
-      aria-label="Select page of users"
+      aria-label="Select page of schedules"
     ></mat-paginator
     >}
   </div>

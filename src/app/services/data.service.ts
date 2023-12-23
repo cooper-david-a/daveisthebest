@@ -16,7 +16,14 @@ import { BadInputError } from '../common/bad-input-error';
   providedIn: 'root',
 })
 export class DataService {
-  constructor(@Inject(String) private url: string, private http: HttpClient) {}
+  baseURL = 'http://localhost:8000/';
+  url!: string;
+  constructor(
+    @Inject(String) relativeRoute: string,
+    private http: HttpClient
+  ) {
+    this.url = this.baseURL + relativeRoute;
+  }
 
   getAll(headers?: HttpHeaders): Observable<Object> {
     let options = headers ? { headers: headers } : {};

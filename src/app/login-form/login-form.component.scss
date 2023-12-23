@@ -1,0 +1,11 @@
+.form-box {
+  width: 100%;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  form {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+  }
+}

@@ -9,12 +9,12 @@ import { DataService } from '../../services/data.service';
   providedIn: 'root',
 })
 export class HiitTimerService {
-  url: string = 'http://localhost:8000/hiit-timer/schedules/';
+  relativeRoute: string = 'hiit-timer/schedules/';
   private dataService: DataService;
   timers!: Schedule[];
 
   constructor(http: HttpClient) {
-    this.dataService = new DataService(this.url, http);
+    this.dataService = new DataService(this.relativeRoute, http);
   }
 
   getSchedules(): Observable<Schedule[]> {
@@ -30,7 +30,7 @@ export class HiitTimerService {
 
 export interface Schedule {
   id?: number;
-  profile?: string;
+  scheduleCreator?: string;
   title: string;
   warmupDescription: string;
   warmup: number;

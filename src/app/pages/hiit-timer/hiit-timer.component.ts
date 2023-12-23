@@ -130,7 +130,7 @@ export class HiitTimerComponent implements OnInit{
       if (schedule) {
         console.log(schedule);
         delete schedule.id;
-        delete schedule.profile;
+        delete schedule.scheduleCreator;
         while (schedule.rows.length < this.rows.length) this.deleteRow();
         while (schedule.rows.length > this.rows.length) this.addRow();
         schedule.rows.forEach((row) => delete row.id);

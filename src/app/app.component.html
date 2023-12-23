@@ -1,20 +1,14 @@
 <mat-toolbar color="primary">
   <button
     mat-icon-button
-    class="example-icon"
-    aria-label="Example icon-button with menu icon"
+    aria-label="icon-button with menu icon"
   >
     <mat-icon>menu</mat-icon>
   </button>
   <a mat-button [routerLink]="['/']">Dave Is The Best!?</a>
+  <mat-divider vertical="true"></mat-divider>
+  <a mat-button [routerLink]="['/login']">Login</a>
   <span class="spacer"></span>
-  <button
-    mat-icon-button
-    class="example-icon"
-    aria-label="Example icon-button with share icon"
-  >
-    <mat-icon>share</mat-icon>
-  </button>
 </mat-toolbar>
 
 <router-outlet></router-outlet>
