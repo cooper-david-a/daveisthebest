@@ -1,6 +1,16 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormGroupDirective,
+  NgForm,
+  Validators,
+} from '@angular/forms';
 import { AuthService } from '../services/auth.service';
+import {
+  ErrorStateMatcher,
+  ShowOnDirtyErrorStateMatcher,
+} from '@angular/material/core';
 
 @Component({
   selector: 'login-form',
@@ -9,15 +19,15 @@ import { AuthService } from '../services/auth.service';
 })
 export class LoginFormComponent {
   needToRegister = false;
+  matcher = new MyErrorStateMatcher();
   loginForm = new FormGroup<LoginForm>({
     username: new FormControl('', {
       validators: [Validators.required],
-    }),
-    email: new FormControl('', {
-      validators: [Validators.email, Validators.required],
+      nonNullable: true,
     }),
     password: new FormControl('', {
       validators: [Validators.required],
+      nonNullable: true,
     }),
   });
 
@@ -25,6 +35,22 @@ export class LoginFormComponent {
 
   login() {
     if (this.loginForm.valid) {
+      let username = this.loginForm.value.username
+        ? this.loginForm.value.username
+        : '';
+      let password = this.loginForm.value.password
+        ? this.loginForm.value.password
+        : '';
+      let email = this.loginForm.value.email ? this.loginForm.value.email : '';
+      if (this.needToRegister) {
+        this.authService.createUser({
+          username: username,
+          email: email,
+          password: password,
+        });
+      } else {
+        this.authService.login(username, password);
+      }
     }
   }
 
@@ -35,26 +61,41 @@ export class LoginFormComponent {
         'confirmPassword',
         new FormControl<string>('', {
           validators: [Validators.required],
+          nonNullable: true,
+        })
+      );
+      this.loginForm.addControl(
+        'email',
+        new FormControl<string>('', {
+          validators: [Validators.email, Validators.required],
+          nonNullable: true,
         })
       );
     } else {
       this.loginForm.removeControl('confirmPassword');
+      this.loginForm.removeControl('email');
     }
-    
-    //kinda hacky but confirmPassword is created ofter this runs otherwise
-    setTimeout(
-      () =>
-        Object.keys(this.loginForm.controls).forEach((key) =>
-          this.loginForm.get(key)?.setErrors(null)
-        ),
-      1
-    );
   }
 }
 
 interface LoginForm {
-  username: FormControl<string | null>;
-  email: FormControl<string | null>;
-  password: FormControl<string | null>;
-  confirmPassword?: FormControl<string | null>;
+  username: FormControl<string>;
+  email?: FormControl<string>;
+  password: FormControl<string>;
+  confirmPassword?: FormControl<string>;
+}
+
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(
+    control: FormControl | null,
+    form: FormGroupDirective | NgForm | null
+  ): boolean {
+    const isSubmitted = form && form.submitted;
+    return !!(
+      control &&
+      control.invalid &&
+      !control.pristine &&
+      (control.touched || isSubmitted)
+    );
+  }
 }

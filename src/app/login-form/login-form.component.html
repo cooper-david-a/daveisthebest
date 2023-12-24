@@ -1,19 +1,35 @@
 <div class="form-box">
   <form [formGroup]="loginForm">
-
     <mat-form-field appearance="fill" class="username">
       <mat-label>Username</mat-label>
-      <input matInput name="username" formControlName="username" />
+      <input
+        matInput
+        name="username"
+        formControlName="username"
+        [errorStateMatcher]="matcher"
+      />
     </mat-form-field>
 
+    @if(needToRegister){
     <mat-form-field appearance="fill" class="email">
       <mat-label>Email</mat-label>
-      <input matInput name="email" formControlName="email"
-    /></mat-form-field>
+      <input
+        matInput
+        name="email"
+        formControlName="email"
+        [errorStateMatcher]="matcher"
+      />
+    </mat-form-field>
+    }
 
     <mat-form-field appearance="fill" class="password">
       <mat-label>Password</mat-label>
-      <input matInput name="password" formControlName="password" />
+      <input
+        matInput
+        name="password"
+        formControlName="password"
+        [errorStateMatcher]="matcher"
+      />
     </mat-form-field>
 
     @if(needToRegister){
@@ -23,15 +39,12 @@
         matInput
         name="confirmPassword"
         formControlName="confirmPassword"
+        [errorStateMatcher]="matcher"
       />
     </mat-form-field>
     }
 
-    <button
-      class="login-button"
-      mat-raised-button
-      color="primary"
-    >
+    <button class="login-button" mat-raised-button color="primary" [disabled]="!loginForm.valid"  (click)="login()">
       @if (needToRegister){ Register } @else { Login }
     </button>
 

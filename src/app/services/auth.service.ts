@@ -33,6 +33,10 @@ export class AuthService {
     );
   }
 
+  createUser(user:NewUser) {
+
+  }
+
 
 }
 
@@ -41,4 +45,10 @@ interface AuthTokens {
   refreshTokenExpiresAt?: number;
   access: string;
   accessTokenExpiresAt: number;
+}
+
+interface NewUser {
+  username: string;
+  email: string;
+  password: string;
 }
