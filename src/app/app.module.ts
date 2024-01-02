@@ -1,6 +1,12 @@
 import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  HttpClientModule,
+  provideHttpClient,
+  withInterceptors,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -17,7 +23,6 @@ import { HomeDashboardComponent } from './pages/home/home-dashboard/home-dashboa
 import { CommentFormComponent } from './comment-form/comment-form.component';
 import { StopwatchPipe } from './pipes/stopwatch.pipe';
 
-
 import { AppMaterialModule } from './app-material.module';
 import { HiitTimerComponent } from './pages/hiit-timer/hiit-timer.component';
 import { HiitTimerOpenDialogComponent } from './pages/hiit-timer/hiit-timer-open-dialog/hiit-timer-open-dialog.component';
@@ -25,6 +30,7 @@ import { ThermodynamicPropertyCalculatorComponent } from './pages/thermodynamic-
 import { HiitTimerService } from './pages/hiit-timer/hiit-timer.service';
 import { AuthService } from './services/auth.service';
 import { LoginFormComponent } from './login-form/login-form.component';
+import { AuthInterceptor } from './auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -56,6 +62,8 @@ import { LoginFormComponent } from './login-form/login-form.component';
     CommentsService,
     HiitTimerService,
     AuthService,
+    provideHttpClient(withInterceptorsFromDi()),
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
     { provide: ErrorHandler, useClass: AppErrorHandler },
   ],
   bootstrap: [AppComponent],

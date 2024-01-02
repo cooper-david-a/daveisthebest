@@ -20,6 +20,26 @@
         [errorStateMatcher]="matcher"
       />
     </mat-form-field>
+
+    <mat-form-field appearance="fill" class="first-name">
+      <mat-label>First Name</mat-label>
+      <input
+        matInput
+        name="firstName"
+        formControlName="firstName"
+        [errorStateMatcher]="matcher"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="last-name">
+      <mat-label>Last Name</mat-label>
+      <input
+        matInput
+        name="lastName"
+        formControlName="lastName"
+        [errorStateMatcher]="matcher"
+      />
+    </mat-form-field>
     }
 
     <mat-form-field appearance="fill" class="password">
@@ -28,6 +48,7 @@
         matInput
         name="password"
         formControlName="password"
+        type="password"
         [errorStateMatcher]="matcher"
       />
     </mat-form-field>
@@ -39,12 +60,19 @@
         matInput
         name="confirmPassword"
         formControlName="confirmPassword"
+        type="password"
         [errorStateMatcher]="matcher"
       />
     </mat-form-field>
     }
 
-    <button class="login-button" mat-raised-button color="primary" [disabled]="!loginForm.valid"  (click)="login()">
+    <button
+      class="login-button"
+      mat-raised-button
+      color="primary"
+      [disabled]="!loginForm.valid"
+      (click)="login()"
+    >
       @if (needToRegister){ Register } @else { Login }
     </button>
 

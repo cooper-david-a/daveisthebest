@@ -1,14 +1,16 @@
 <mat-toolbar color="primary">
-  <button
-    mat-icon-button
-    aria-label="icon-button with menu icon"
-  >
+  <button mat-icon-button aria-label="icon-button with menu icon">
     <mat-icon>menu</mat-icon>
   </button>
   <a mat-button [routerLink]="['/']">Dave Is The Best!?</a>
   <mat-divider vertical="true"></mat-divider>
-  <a mat-button [routerLink]="['/login']">Login</a>
   <span class="spacer"></span>
+
+  @if(authService.currentUser.getValue()){
+  <span>Logged in as: {{ authService.currentUser.getValue()?.username }}</span>
+  <button mat-button (click)="authService.logout()">Logout</button>}@else{
+  <a mat-button [routerLink]="['/login']">Login</a>
+  }
 </mat-toolbar>
 
 <router-outlet></router-outlet>

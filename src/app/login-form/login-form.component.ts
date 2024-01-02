@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -7,17 +7,15 @@ import {
   Validators,
 } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
-import {
-  ErrorStateMatcher,
-  ShowOnDirtyErrorStateMatcher,
-} from '@angular/material/core';
+import { ErrorStateMatcher } from '@angular/material/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'login-form',
   templateUrl: './login-form.component.html',
   styleUrl: './login-form.component.scss',
 })
-export class LoginFormComponent {
+export class LoginFormComponent implements OnInit {
   needToRegister = false;
   matcher = new MyErrorStateMatcher();
   loginForm = new FormGroup<LoginForm>({
@@ -30,8 +28,16 @@ export class LoginFormComponent {
       nonNullable: true,
     }),
   });
+  returnUrl!: string;
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
+  ngOnInit(): void {
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+  }
 
   login() {
     if (this.loginForm.valid) {
@@ -42,14 +48,28 @@ export class LoginFormComponent {
         ? this.loginForm.value.password
         : '';
       let email = this.loginForm.value.email ? this.loginForm.value.email : '';
+      let firstName = this.loginForm.value.firstName
+        ? this.loginForm.value.firstName
+        : '';
+      let lastName = this.loginForm.value.lastName
+        ? this.loginForm.value.lastName
+        : '';
       if (this.needToRegister) {
-        this.authService.createUser({
-          username: username,
-          email: email,
-          password: password,
-        });
+        this.authService
+          .register({
+            username: username,
+            email: email,
+            password: password,
+            firstName: firstName,
+            lastName: lastName,
+          })
+          .subscribe((tokens) => {
+            this.needToRegister = false;
+          });
       } else {
-        this.authService.login(username, password);
+        this.authService.login(username, password).subscribe((tokens) => {
+          this.router.navigate([this.returnUrl]);
+        });
       }
     }
   }
@@ -65,6 +85,20 @@ export class LoginFormComponent {
         })
       );
       this.loginForm.addControl(
+        'firstName',
+        new FormControl<string>('', {
+          validators: [],
+          nonNullable: true,
+        })
+      );
+      this.loginForm.addControl(
+        'lastName',
+        new FormControl<string>('', {
+          validators: [],
+          nonNullable: true,
+        })
+      );
+      this.loginForm.addControl(
         'email',
         new FormControl<string>('', {
           validators: [Validators.email, Validators.required],
@@ -74,14 +108,18 @@ export class LoginFormComponent {
     } else {
       this.loginForm.removeControl('confirmPassword');
       this.loginForm.removeControl('email');
+      this.loginForm.removeControl('firstName');
+      this.loginForm.removeControl('lastName');
     }
   }
 }
 
 interface LoginForm {
   username: FormControl<string>;
-  email?: FormControl<string>;
   password: FormControl<string>;
+  firstName?: FormControl<string>;
+  lastName?: FormControl<string>;
+  email?: FormControl<string>;
   confirmPassword?: FormControl<string>;
 }
 
@@ -94,7 +132,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
     return !!(
       control &&
       control.invalid &&
-      !control.pristine &&
+      control.dirty &&
       (control.touched || isSubmitted)
     );
   }
