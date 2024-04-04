@@ -9,6 +9,7 @@ import {
 import { AuthService } from '../services/auth.service';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LoginFormValidators } from './login-form.validators';
 
 @Component({
   selector: 'login-form',
@@ -17,7 +18,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class LoginFormComponent implements OnInit {
   needToRegister = false;
-  matcher = new MyErrorStateMatcher();
+  defaultMatcher = new DefaultErrorStateMatcher();
+  passwordMatcher = new PasswordErrorStateMatcher();
   loginForm = new FormGroup<LoginForm>({
     username: new FormControl('', {
       validators: [Validators.required],
@@ -105,11 +107,17 @@ export class LoginFormComponent implements OnInit {
           nonNullable: true,
         })
       );
+      this.loginForm.addValidators([
+        LoginFormValidators.confirmPasswordMatchesValidator,
+      ]);
     } else {
       this.loginForm.removeControl('confirmPassword');
       this.loginForm.removeControl('email');
       this.loginForm.removeControl('firstName');
       this.loginForm.removeControl('lastName');
+      this.loginForm.removeValidators([
+        LoginFormValidators.confirmPasswordMatchesValidator,
+      ]);
     }
   }
 }
@@ -123,7 +131,7 @@ interface LoginForm {
   confirmPassword?: FormControl<string>;
 }
 
-export class MyErrorStateMatcher implements ErrorStateMatcher {
+export class DefaultErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
     control: FormControl | null,
     form: FormGroupDirective | NgForm | null
@@ -135,5 +143,15 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
       control.dirty &&
       (control.touched || isSubmitted)
     );
+  }
+}
+
+export class PasswordErrorStateMatcher extends DefaultErrorStateMatcher {
+  override isErrorState(
+    control: FormControl | null,
+    form: FormGroupDirective | NgForm | null
+  ): boolean {
+    let passwordsDoNotMatch = form?.getError('passwordsDoNotMatch');
+    return super.isErrorState(control, form) || passwordsDoNotMatch;
   }
 }

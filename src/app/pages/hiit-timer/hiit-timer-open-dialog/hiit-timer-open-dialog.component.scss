@@ -5,6 +5,13 @@
   justify-content: center;
 }
 
+.filter-box {
+  display: flex;
+  mat-form-field{
+    flex: 1 0 auto;
+  }
+}
+
 .mat-mdc-row:hover {
   @include theme.mat-elevation(10);
   cursor: pointer;

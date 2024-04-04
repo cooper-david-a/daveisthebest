@@ -6,7 +6,7 @@
         matInput
         name="username"
         formControlName="username"
-        [errorStateMatcher]="matcher"
+        [errorStateMatcher]="defaultMatcher"
       />
     </mat-form-field>
 
@@ -17,7 +17,7 @@
         matInput
         name="email"
         formControlName="email"
-        [errorStateMatcher]="matcher"
+        [errorStateMatcher]="defaultMatcher"
       />
     </mat-form-field>
 
@@ -27,7 +27,7 @@
         matInput
         name="firstName"
         formControlName="firstName"
-        [errorStateMatcher]="matcher"
+        [errorStateMatcher]="defaultMatcher"
       />
     </mat-form-field>
 
@@ -37,7 +37,7 @@
         matInput
         name="lastName"
         formControlName="lastName"
-        [errorStateMatcher]="matcher"
+        [errorStateMatcher]="defaultMatcher"
       />
     </mat-form-field>
     }
@@ -49,7 +49,7 @@
         name="password"
         formControlName="password"
         type="password"
-        [errorStateMatcher]="matcher"
+        [errorStateMatcher]="defaultMatcher"
       />
     </mat-form-field>
 
@@ -61,7 +61,7 @@
         name="confirmPassword"
         formControlName="confirmPassword"
         type="password"
-        [errorStateMatcher]="matcher"
+        [errorStateMatcher]="passwordMatcher"
       />
     </mat-form-field>
     }

@@ -18,7 +18,12 @@
     </div>
 
     <div class="controls">
-      <button mat-flat-button (click)="playPause()" color="primary">
+      <button
+        mat-flat-button
+        (click)="playPause()"
+        color="primary"
+        [disabled]="scheduleForm.invalid"
+      >
         <mat-icon *ngIf="!running">play_arrow</mat-icon>
         <mat-icon *ngIf="running">pause</mat-icon>
       </button>
@@ -41,7 +46,7 @@
         mat-flat-button
         color="primary"
         (click)="saveSchedule()"
-        [disabled]="!scheduleForm.valid"
+        [disabled]="scheduleForm.invalid || !authService.isLoggedIn()"
       >
         Save Timer
       </button>

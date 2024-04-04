@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 
 import { DataService } from '../../services/data.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,7 @@ export class HiitTimerService {
   private dataService: DataService;
   timers!: Schedule[];
 
-  constructor(http: HttpClient) {
+  constructor(private http: HttpClient, private authService: AuthService) {
     this.dataService = new DataService(this.relativeRoute, http);
   }
 
@@ -24,7 +25,8 @@ export class HiitTimerService {
   }
 
   saveSchedule(schedule: Schedule) {
-    this.dataService.create(schedule).subscribe((data) => console.log(data));
+    if (this.authService.isLoggedIn())
+      this.dataService.create(schedule).subscribe((data) => console.log(data));
   }
 }
 

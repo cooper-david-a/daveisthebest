@@ -6,6 +6,7 @@ import { MatTable } from '@angular/material/table';
 
 import { HiitTimerOpenDialogComponent } from './hiit-timer-open-dialog/hiit-timer-open-dialog.component';
 import { HiitTimerService, Schedule, Row } from './hiit-timer.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'hiit-timer',
@@ -59,6 +60,7 @@ export class HiitTimerComponent implements OnInit{
 
   constructor(
     public openScheduleDialog: MatDialog,
+    public authService: AuthService,
     private service: HiitTimerService
   ) {}
 
@@ -128,7 +130,6 @@ export class HiitTimerComponent implements OnInit{
 
     dialogRef.afterClosed().subscribe((schedule: Schedule) => {
       if (schedule) {
-        console.log(schedule);
         delete schedule.id;
         delete schedule.scheduleCreator;
         while (schedule.rows.length < this.rows.length) this.deleteRow();

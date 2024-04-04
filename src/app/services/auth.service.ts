@@ -91,6 +91,10 @@ export class AuthService implements OnInit {
       .subscribe((me) => this.currentUser.next(me));
   }
 
+  isLoggedIn(){
+    return !!(this.currentUser.getValue())
+  }
+
   //helper methods
 
   private refreshTokenTimeout!: NodeJS.Timeout;
@@ -120,8 +124,8 @@ export class AuthService implements OnInit {
     let refresh = localStorage.getItem('refresh');
     let refreshTokenExpiresAt = Number(
       localStorage.getItem('refreshTokenExpiresAt')
-    );
-    if (access && refresh) {
+      );
+      if (access && refresh) {
       this.tokens.next({
         access,
         accessTokenExpiresAt,
