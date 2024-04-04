@@ -8,8 +8,8 @@ describe('ThermodynamicPropertyCalculatorComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ThermodynamicPropertyCalculatorComponent]
-    });
+    imports: [ThermodynamicPropertyCalculatorComponent]
+});
     fixture = TestBed.createComponent(ThermodynamicPropertyCalculatorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

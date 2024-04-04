@@ -1,8 +1,12 @@
 import { Component, Injectable, OnInit } from '@angular/core';
 
-import { MatPaginatorIntl, PageEvent } from '@angular/material/paginator';
+import { MatPaginatorIntl, PageEvent, MatPaginatorModule } from '@angular/material/paginator';
 
 import { CommentsService } from '../services/comments.service';
+import { CommentComponent } from '../comment/comment.component';
+import { NgFor } from '@angular/common';
+import { CommentFormComponent } from '../comment-form/comment-form.component';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Injectable()
 export class CommentsPaginator extends MatPaginatorIntl {
@@ -10,10 +14,18 @@ export class CommentsPaginator extends MatPaginatorIntl {
 }
 
 @Component({
-  selector: 'comments',
-  templateUrl: './comments.component.html',
-  styleUrls: ['./comments.component.scss'],
-  providers: [{ provide: MatPaginatorIntl, useClass: CommentsPaginator }],
+    selector: 'comments',
+    templateUrl: './comments.component.html',
+    styleUrls: ['./comments.component.scss'],
+    providers: [{ provide: MatPaginatorIntl, useClass: CommentsPaginator }],
+    standalone: true,
+    imports: [
+        MatDividerModule,
+        CommentFormComponent,
+        MatPaginatorModule,
+        NgFor,
+        CommentComponent,
+    ],
 })
 export class CommentsComponent implements OnInit {
   pageSizeOptions = [5, 10, 25, 50];

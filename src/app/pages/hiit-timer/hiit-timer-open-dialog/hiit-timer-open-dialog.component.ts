@@ -6,9 +6,12 @@ import {
   ViewChild
 } from '@angular/core';
 import { HiitTimerService, Schedule } from '../hiit-timer.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatDialogRef } from '@angular/material/dialog';
-import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { MatPaginator, MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Injectable()
 export class SchedulePaginator extends MatPaginatorIntl {
@@ -16,10 +19,19 @@ export class SchedulePaginator extends MatPaginatorIntl {
 }
 
 @Component({
-  selector: 'hiit-timer-open-dialog',
-  templateUrl: './hiit-timer-open-dialog.component.html',
-  styleUrls: ['./hiit-timer-open-dialog.component.scss'],
-  providers: [{ provide: MatPaginatorIntl, useClass: SchedulePaginator }],
+    selector: 'hiit-timer-open-dialog',
+    templateUrl: './hiit-timer-open-dialog.component.html',
+    styleUrls: ['./hiit-timer-open-dialog.component.scss'],
+    providers: [{ provide: MatPaginatorIntl, useClass: SchedulePaginator }],
+    standalone: true,
+    imports: [
+        MatProgressSpinnerModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatTableModule,
+        MatDialogModule,
+        MatPaginatorModule,
+    ],
 })
 export class HiitTimerOpenDialogComponent implements OnInit {
   schedules!: Schedule[];

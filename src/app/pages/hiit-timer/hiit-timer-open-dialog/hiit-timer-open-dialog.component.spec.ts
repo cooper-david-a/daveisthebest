@@ -8,8 +8,8 @@ describe('HiitTimerOpenDialogComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [HiitTimerOpenDialogComponent]
-    });
+    imports: [HiitTimerOpenDialogComponent]
+});
     fixture = TestBed.createComponent(HiitTimerOpenDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
