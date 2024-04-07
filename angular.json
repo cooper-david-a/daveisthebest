@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/dave-is-the-best",
+            "outputPath": "dist/DaveIsTheBest/browser",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -104,6 +104,60 @@
             ],
             "scripts": []
           }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/DaveIsTheBest/server",
+            "main": "server.ts",
+            "tsConfig": "tsconfig.server.json"
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "media"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "sourceMap": true,
+              "extractLicenses": false,
+              "vendorChunk": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve-ssr": {
+          "builder": "@angular-devkit/build-angular:ssr-dev-server",
+          "configurations": {
+            "development": {
+              "browserTarget": "DaveIsTheBest:build:development",
+              "serverTarget": "DaveIsTheBest:server:development"
+            },
+            "production": {
+              "browserTarget": "DaveIsTheBest:build:production",
+              "serverTarget": "DaveIsTheBest:server:production"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "prerender": {
+          "builder": "@angular-devkit/build-angular:prerender",
+          "options": {
+            "routes": [
+              "/"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "DaveIsTheBest:build:production",
+              "serverTarget": "DaveIsTheBest:server:production"
+            },
+            "development": {
+              "browserTarget": "DaveIsTheBest:build:development",
+              "serverTarget": "DaveIsTheBest:server:development"
+            }
+          },
+          "defaultConfiguration": "production"
         }
       }
     }

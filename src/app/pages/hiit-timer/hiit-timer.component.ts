@@ -1,7 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormArray,
+  FormControl,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatTable, MatTableModule } from '@angular/material/table';
 
 import { HiitTimerOpenDialogComponent } from './hiit-timer-open-dialog/hiit-timer-open-dialog.component';
@@ -16,24 +23,25 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
-    selector: 'hiit-timer',
-    templateUrl: './hiit-timer.component.html',
-    styleUrls: ['./hiit-timer.component.scss'],
-    standalone: true,
-    imports: [
-        MatProgressBarModule,
-        MatButtonModule,
-        NgIf,
-        MatIconModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatTableModule,
-        StopwatchPipe,
-    ],
+  selector: 'hiit-timer',
+  templateUrl: './hiit-timer.component.html',
+  styleUrls: ['./hiit-timer.component.scss'],
+  standalone: true,
+  imports: [
+    MatProgressBarModule,
+    MatButtonModule,
+    NgIf,
+    MatIconModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    StopwatchPipe,
+    MatDialogModule
+  ],
 })
-export class HiitTimerComponent implements OnInit{
+export class HiitTimerComponent implements OnInit {
   scheduleForm = new FormGroup({
     title: new FormControl<string>('', {
       validators: [Validators.required, Validators.maxLength(100)],
