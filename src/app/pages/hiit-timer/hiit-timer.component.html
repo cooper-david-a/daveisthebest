@@ -4,8 +4,8 @@
 
     <h1>
       @if(roundIndex >= 0){ Round {{ roundIndex + 1 }} of
-      {{ flatRoundsArray.length }} -
-      {{ flatRoundsArray[roundIndex].description }}
+        {{ flatRoundsArray.length }} -
+        {{ flatRoundsArray[roundIndex].description }}
       }
     </h1>
 
@@ -23,9 +23,13 @@
         (click)="playPause()"
         color="primary"
         [disabled]="scheduleForm.invalid"
-      >
-        <mat-icon *ngIf="!running">play_arrow</mat-icon>
-        <mat-icon *ngIf="running">pause</mat-icon>
+        >
+        @if (!running) {
+          <mat-icon>play_arrow</mat-icon>
+        }
+        @if (running) {
+          <mat-icon>pause</mat-icon>
+        }
       </button>
       <button mat-flat-button (click)="stop()" color="primary">
         <mat-icon>stop</mat-icon>
@@ -47,7 +51,7 @@
         color="primary"
         (click)="saveSchedule()"
         [disabled]="scheduleForm.invalid || !authService.isLoggedIn()"
-      >
+        >
         Save Timer
       </button>
     </div>
@@ -56,12 +60,12 @@
       class="schedule"
       [formGroup]="scheduleForm"
       (change)="generateTimer()"
-    >
+      >
       <mat-form-field
         class="title-text-area"
         appearance="fill"
         subscriptSizing="dynamic"
-      >
+        >
         <mat-label>Title</mat-label>
         <textarea matInput type="text" formControlName="title"></textarea>
       </mat-form-field>
@@ -75,7 +79,7 @@
           <div
             (click)="warmupCooldownDescShown = !warmupCooldownDescShown"
             class="expand-button"
-          >
+            >
             @if(warmupCooldownDescShown){<mat-icon>expand_less</mat-icon>}@else{<mat-icon>expand_more</mat-icon>}
           </div>
           <mat-form-field appearance="fill" subscriptSizing="dynamic">
@@ -88,7 +92,7 @@
             class="title-text-area"
             appearance="fill"
             subscriptSizing="dynamic"
-          >
+            >
             <mat-label>Warmup Description</mat-label>
             <textarea
               matInput
@@ -101,7 +105,7 @@
             class="title-text-area"
             appearance="fill"
             subscriptSizing="dynamic"
-          >
+            >
             <mat-label>Cooldown Description</mat-label>
             <textarea
               matInput
@@ -116,83 +120,83 @@
         [dataSource]="rows.controls"
         formArrayName="rows"
         multiTemplateDataRows
-      >
+        >
         <ng-container matColumnDef="expand">
           <mat-header-cell *matHeaderCellDef></mat-header-cell>
           <mat-cell *matCellDef="let row; let i = dataIndex">
             <div
               (click)="expandedRowIndex = expandedRowIndex == i ? null : i"
               class="expand-button"
-            >
+              >
               @if(expandedRowIndex==i){<mat-icon>expand_more</mat-icon>}@else{<mat-icon>expand_less</mat-icon>}
             </div></mat-cell
-          >
-        </ng-container>
-
-        <ng-container matColumnDef="hard">
-          <mat-header-cell *matHeaderCellDef> Hard </mat-header-cell>
-          <mat-cell
-            *matCellDef="let row; let i = dataIndex"
-            [formGroupName]="i"
-          >
-            <mat-form-field appearance="outline" subscriptSizing="dynamic">
-              <input matInput type="number" formControlName="hard" />
-            </mat-form-field>
-          </mat-cell>
-        </ng-container>
-
-        <ng-container matColumnDef="easy">
-          <mat-header-cell *matHeaderCellDef> Easy </mat-header-cell>
-          <mat-cell
-            *matCellDef="let row; let i = dataIndex"
-            [formGroupName]="i"
-          >
-            <mat-form-field appearance="outline" subscriptSizing="dynamic">
-              <input matInput type="number" formControlName="easy" />
-            </mat-form-field>
-          </mat-cell>
-        </ng-container>
-
-        <ng-container matColumnDef="rounds">
-          <mat-header-cell *matHeaderCellDef> Rounds </mat-header-cell>
-          <mat-cell
-            *matCellDef="let row; let i = dataIndex"
-            [formGroupName]="i"
-          >
-            <mat-form-field appearance="outline" subscriptSizing="dynamic">
-              <input matInput type="number" formControlName="rounds" />
-            </mat-form-field>
-          </mat-cell>
-        </ng-container>
-
-        <ng-container matColumnDef="descriptions">
-          <mat-cell
-            *matCellDef="let row; let i = dataIndex"
-            [formGroupName]="i"
-          >
-            <mat-form-field
-              appearance="fill"
-              subscriptSizing="dynamic"
-              [hidden]="expandedRowIndex != i"
             >
-              <mat-label>Hard Description</mat-label>
-              <textarea matInput formControlName="hardDescription"></textarea>
-            </mat-form-field>
-            <mat-form-field appearance="fill" subscriptSizing="dynamic">
-              <mat-label>Easy Description</mat-label>
-              <textarea matInput formControlName="easyDescription"></textarea>
-            </mat-form-field>
-          </mat-cell>
-        </ng-container>
+          </ng-container>
 
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-        <mat-row
-          *matRowDef="let row; let i = dataIndex; columns: ['descriptions']"
-          class="descriptions"
-          [class.collapsed]="expandedRowIndex !== i"
-        ></mat-row>
-      </mat-table>
-    </form>
-  </section>
-</div>
+          <ng-container matColumnDef="hard">
+            <mat-header-cell *matHeaderCellDef> Hard </mat-header-cell>
+            <mat-cell
+              *matCellDef="let row; let i = dataIndex"
+              [formGroupName]="i"
+              >
+              <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                <input matInput type="number" formControlName="hard" />
+              </mat-form-field>
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="easy">
+            <mat-header-cell *matHeaderCellDef> Easy </mat-header-cell>
+            <mat-cell
+              *matCellDef="let row; let i = dataIndex"
+              [formGroupName]="i"
+              >
+              <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                <input matInput type="number" formControlName="easy" />
+              </mat-form-field>
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="rounds">
+            <mat-header-cell *matHeaderCellDef> Rounds </mat-header-cell>
+            <mat-cell
+              *matCellDef="let row; let i = dataIndex"
+              [formGroupName]="i"
+              >
+              <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                <input matInput type="number" formControlName="rounds" />
+              </mat-form-field>
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="descriptions">
+            <mat-cell
+              *matCellDef="let row; let i = dataIndex"
+              [formGroupName]="i"
+              >
+              <mat-form-field
+                appearance="fill"
+                subscriptSizing="dynamic"
+                [hidden]="expandedRowIndex != i"
+                >
+                <mat-label>Hard Description</mat-label>
+                <textarea matInput formControlName="hardDescription"></textarea>
+              </mat-form-field>
+              <mat-form-field appearance="fill" subscriptSizing="dynamic">
+                <mat-label>Easy Description</mat-label>
+                <textarea matInput formControlName="easyDescription"></textarea>
+              </mat-form-field>
+            </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+          <mat-row
+            *matRowDef="let row; let i = dataIndex; columns: ['descriptions']"
+            class="descriptions"
+            [class.collapsed]="expandedRowIndex !== i"
+          ></mat-row>
+        </mat-table>
+      </form>
+    </section>
+  </div>

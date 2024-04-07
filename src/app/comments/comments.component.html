@@ -13,11 +13,12 @@
     [pageIndex]="pageIndex"
     [showFirstLastButtons]="true"
     aria-label="Select page"
-  >
+    >
   </mat-paginator>
 
-  <comment
-    *ngFor="let commentId of pageContent"
-    [commentObject]="service.comments[commentId]"
-  ></comment>
+  @for (commentId of pageContent; track commentId) {
+    <comment
+      [commentObject]="service.comments[commentId]"
+    ></comment>
+  }
 </div>

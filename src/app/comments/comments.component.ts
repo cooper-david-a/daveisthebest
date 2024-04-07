@@ -4,7 +4,7 @@ import { MatPaginatorIntl, PageEvent, MatPaginatorModule } from '@angular/materi
 
 import { CommentsService } from '../services/comments.service';
 import { CommentComponent } from '../comment/comment.component';
-import { NgFor } from '@angular/common';
+
 import { CommentFormComponent } from '../comment-form/comment-form.component';
 import { MatDividerModule } from '@angular/material/divider';
 
@@ -20,12 +20,11 @@ export class CommentsPaginator extends MatPaginatorIntl {
     providers: [{ provide: MatPaginatorIntl, useClass: CommentsPaginator }],
     standalone: true,
     imports: [
-        MatDividerModule,
-        CommentFormComponent,
-        MatPaginatorModule,
-        NgFor,
-        CommentComponent,
-    ],
+    MatDividerModule,
+    CommentFormComponent,
+    MatPaginatorModule,
+    CommentComponent
+],
 })
 export class CommentsComponent implements OnInit {
   pageSizeOptions = [5, 10, 25, 50];

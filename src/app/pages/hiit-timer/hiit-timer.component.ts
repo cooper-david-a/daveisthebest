@@ -18,7 +18,7 @@ import { StopwatchPipe } from '../../pipes/stopwatch.pipe';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { NgIf } from '@angular/common';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 
@@ -30,7 +30,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
   imports: [
     MatProgressBarModule,
     MatButtonModule,
-    NgIf,
     MatIconModule,
     FormsModule,
     ReactiveFormsModule,
@@ -39,7 +38,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatTableModule,
     StopwatchPipe,
     MatDialogModule
-  ],
+],
 })
 export class HiitTimerComponent implements OnInit {
   scheduleForm = new FormGroup({

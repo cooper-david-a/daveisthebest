@@ -1,7 +1,9 @@
 <form #f="ngForm">
-  <button *ngIf="closable" class="close-button" mat-mini-fab color="primary" (click)="handleCloseForm()">
-    <mat-icon>close</mat-icon>
-  </button>
+  @if (closable) {
+    <button class="close-button" mat-mini-fab color="primary" (click)="handleCloseForm()">
+      <mat-icon>close</mat-icon>
+    </button>
+  }
 
   <mat-form-field appearance="fill" class="name-field">
     <input matInput ngModel name="name" placeholder="Name (optional)" />

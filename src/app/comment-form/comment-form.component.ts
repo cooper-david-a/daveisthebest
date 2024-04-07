@@ -4,7 +4,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { NgIf } from '@angular/common';
+
 
 @Component({
     selector: 'comment-form',
@@ -12,13 +12,12 @@ import { NgIf } from '@angular/common';
     styleUrls: ['./comment-form.component.scss'],
     standalone: true,
     imports: [
-        FormsModule,
-        NgIf,
-        MatButtonModule,
-        MatIconModule,
-        MatFormFieldModule,
-        MatInputModule,
-    ],
+    FormsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule
+],
 })
 export class CommentFormComponent {
   @Input() parentCommentId!: number;

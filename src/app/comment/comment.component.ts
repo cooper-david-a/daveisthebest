@@ -4,7 +4,7 @@ import { TimeSincePipe } from '../pipes/time-since.pipe';
 import { CommentFormComponent } from '../comment-form/comment-form.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
-import { NgIf, NgFor } from '@angular/common';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 
@@ -14,15 +14,13 @@ import { MatCardModule } from '@angular/material/card';
     styleUrls: ['./comment.component.scss'],
     standalone: true,
     imports: [
-        MatCardModule,
-        MatButtonModule,
-        NgIf,
-        MatDividerModule,
-        MatIconModule,
-        NgFor,
-        CommentFormComponent,
-        TimeSincePipe,
-    ],
+    MatCardModule,
+    MatButtonModule,
+    MatDividerModule,
+    MatIconModule,
+    CommentFormComponent,
+    TimeSincePipe
+],
 })
 export class CommentComponent {
   @Input() commentObject!: Comment;
