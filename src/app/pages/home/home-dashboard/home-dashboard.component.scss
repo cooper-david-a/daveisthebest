@@ -1,4 +1,4 @@
-@use '@angular/material/theming' as theme;
+@use '@angular/material' as mat;
 
 .card-container {
   display: flex;
@@ -17,7 +17,7 @@ mat-card {
   margin: 20px;
   cursor: pointer;
   &:hover {
-    @include theme.mat-elevation(8);
+    @include mat.elevation(8);
   }
 }
 

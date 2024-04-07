@@ -1,4 +1,4 @@
-@use "@angular/material/theming" as theme;
+@use "@angular/material" as mat;
 
 .spinner-box {
   display: flex;
@@ -13,6 +13,6 @@
 }
 
 .mat-mdc-row:hover {
-  @include theme.mat-elevation(10);
+  @include mat.elevation(10);
   cursor: pointer;
 }

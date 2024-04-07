@@ -1,11 +1,11 @@
-@use "@angular/material/theming" as theme;
+@use "@angular/material" as mat;
 
 .container {
   margin: 5px auto 5px auto;
   max-width: 800px;
   min-width: 300px;
   width: 100%;
-  @include theme.mat-elevation(8);
+  @include mat.elevation(8);
   padding: 5px;
   border-radius: 5px;
 }
