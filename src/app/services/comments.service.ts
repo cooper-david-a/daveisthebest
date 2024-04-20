@@ -25,6 +25,16 @@ export class CommentsService {
       .pipe(map((comments) => this.configureComments(comments)));
   }
 
+  postComment(
+    commentText: string,
+    parentCommentId: number | null
+  ): Observable<Comment> {
+    let comment = { commentText: commentText, parentComment: parentCommentId};
+    return this.dataService
+      .create(comment)
+      .pipe(map((response) => response as Comment));
+  }
+
   private configureComments(comments: Comment[]) {
     let commentsObject: Comments = {};
     comments.forEach((comment) => {

@@ -4,6 +4,7 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 import { CommentsComponent } from './comments/comments.component';
 import { AuthService } from './services/auth.service';
 
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -15,6 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrls: ['./app.component.scss'],
   standalone: true,
   imports: [
+    MatSidenavModule,
     MatToolbarModule,
     MatIconModule,
     MatButtonModule,

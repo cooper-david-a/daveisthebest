@@ -1,17 +1,29 @@
-<form #f="ngForm">
-  @if (closable) {
-    <button class="close-button" mat-mini-fab color="primary" (click)="handleCloseForm()">
+<form [formGroup]="form">
+  <mat-form-field appearance="fill" class="comment-field">
+    <mat-label>Comment</mat-label>
+    <textarea matInput formControlName="commentText"></textarea>
+  </mat-form-field>
+
+  <div class="button-box">
+    @if (closable) {
+    <button
+      class="close-button"
+      mat-mini-fab
+      color="primary"
+      (click)="handleCloseForm()"
+    >
       <mat-icon>close</mat-icon>
     </button>
-  }
+    }
 
-  <mat-form-field appearance="fill" class="name-field">
-    <input matInput ngModel name="name" placeholder="Name (optional)" />
-  </mat-form-field>
-
-  <mat-form-field appearance="fill" class="comment-field">
-    <textarea matInput ngModel name="comment" placeholder="Comment"></textarea>
-  </mat-form-field>
-
-  <button class="post-button" mat-raised-button color="primary" [disabled]="!f.valid">Post</button>
+    <button
+      class="post-button"
+      mat-raised-button
+      color="primary"
+      [disabled]="form.invalid"
+      (click)="postComment()"
+    >
+      Post
+    </button>
+  </div>
 </form>

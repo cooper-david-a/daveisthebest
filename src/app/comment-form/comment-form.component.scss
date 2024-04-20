@@ -16,8 +16,8 @@ form {
   width: 100%;
 }
 
-.close-button {
-  position: absolute;
-  right: 10px;
-  top: 10px;
+.button-box{
+  display: flex;
+  align-items: center;
+  gap: 2ch;
 }

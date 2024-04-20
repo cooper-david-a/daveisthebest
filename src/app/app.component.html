@@ -1,19 +1,26 @@
-<mat-toolbar color="primary">
-  <button mat-icon-button aria-label="icon-button with menu icon">
-    <mat-icon>menu</mat-icon>
-  </button>
-  <a mat-button [routerLink]="['/']">Dave Is The Best!?</a>
-  <mat-divider vertical="true"></mat-divider>
-  <span class="spacer"></span>
+<mat-sidenav-container>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary" class="header">
+      <button mat-icon-button aria-label="icon-button with menu icon">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <a mat-button [routerLink]="['/']">Dave Is The Best!?</a>
+      <mat-divider [vertical]="true"></mat-divider>
+      <span class="spacer"></span>
 
-  @if(authService.currentUser.getValue()){
-  <span>Logged in as: {{ authService.currentUser.getValue()?.username }}</span>
-  <button mat-button (click)="authService.logout()">Logout</button>}@else{
-  <a mat-button [routerLink]="['/login']">Login</a>
-  }
-</mat-toolbar>
+      @if(authService.currentUser.getValue()){
+      <span
+        >Logged in as: {{ authService.currentUser.getValue()?.username }}</span
+      >
+      <mat-divider [vertical]="true"></mat-divider>
+      <button mat-button (click)="authService.logout()">Logout</button>}@else{
+      <a mat-button [routerLink]="['/login']">Login</a>
+      }
+    </mat-toolbar>
+    <router-outlet></router-outlet>
 
-<router-outlet></router-outlet>
-
-<mat-divider></mat-divider>
-<comments></comments>
+    <mat-divider class="comments-divider"></mat-divider>
+    <comments></comments>
+    <mat-toolbar color="primary" class="footer"></mat-toolbar>
+  </mat-sidenav-content>
+</mat-sidenav-container>

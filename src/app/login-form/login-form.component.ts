@@ -7,6 +7,7 @@ import { LoginFormValidators } from './login-form.validators';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'login-form',
@@ -19,9 +20,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
         MatFormFieldModule,
         MatInputModule,
         MatButtonModule,
+        MatProgressSpinnerModule,
     ],
 })
 export class LoginFormComponent implements OnInit {
+  isLoading = false;
   needToRegister = false;
   defaultMatcher = new DefaultErrorStateMatcher();
   passwordMatcher = new PasswordErrorStateMatcher();

@@ -1,19 +1,26 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable, OnInit, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, shareReplay, map } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService implements OnInit {
-  baseUrl = 'http://localhost:8000/auth/';
+  baseUrl = environment.apiUrl + 'auth/';
   currentUser = new BehaviorSubject<User | null>(null);
   tokens = new BehaviorSubject<AuthTokens | null>(null);
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    if (isPlatformBrowser(PLATFORM_ID)) {
+      console.log('auth service constructor');
+      this.loadTokensFromStorage();
+      this.getMe();
+    }
+  }
   ngOnInit(): void {
-    this.loadTokensFromStorage();
-    this.getMe();
+    console.log('auth service ngOnInit');
   }
 
   login(username: string, password: string) {
@@ -91,8 +98,8 @@ export class AuthService implements OnInit {
       .subscribe((me) => this.currentUser.next(me));
   }
 
-  isLoggedIn(){
-    return !!(this.currentUser.getValue())
+  isLoggedIn() {
+    return !!this.currentUser.getValue();
   }
 
   //helper methods
@@ -124,8 +131,8 @@ export class AuthService implements OnInit {
     let refresh = localStorage.getItem('refresh');
     let refreshTokenExpiresAt = Number(
       localStorage.getItem('refreshTokenExpiresAt')
-      );
-      if (access && refresh) {
+    );
+    if (access && refresh) {
       this.tokens.next({
         access,
         accessTokenExpiresAt,

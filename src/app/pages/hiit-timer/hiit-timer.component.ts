@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  PLATFORM_ID,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import {
   FormArray,
   FormControl,
@@ -8,7 +14,11 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 
-import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { MatTable, MatTableModule } from '@angular/material/table';
 
 import { HiitTimerOpenDialogComponent } from './hiit-timer-open-dialog/hiit-timer-open-dialog.component';
@@ -21,6 +31,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'hiit-timer',
@@ -37,8 +48,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatInputModule,
     MatTableModule,
     StopwatchPipe,
-    MatDialogModule
-],
+    MatDialogModule,
+  ],
 })
 export class HiitTimerComponent implements OnInit {
   scheduleForm = new FormGroup({
@@ -79,7 +90,9 @@ export class HiitTimerComponent implements OnInit {
   roundIndex = 0;
   timer!: NodeJS.Timeout;
   progress = 0;
-  bell = new Audio('../assets/Bell.wav');
+  bell = isPlatformBrowser(PLATFORM_ID)
+    ? new Audio('../assets/Bell.wav')
+    : { play: () => {} };
 
   displayedColumns = ['expand', 'hard', 'easy', 'rounds'];
   expandedRowIndex!: number | null;

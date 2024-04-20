@@ -7,6 +7,7 @@
         name="username"
         formControlName="username"
         [errorStateMatcher]="defaultMatcher"
+        autocomplete="username"
       />
     </mat-form-field>
 
@@ -18,6 +19,7 @@
         name="email"
         formControlName="email"
         [errorStateMatcher]="defaultMatcher"
+        autocomplete="email"
       />
     </mat-form-field>
 
@@ -28,6 +30,7 @@
         name="firstName"
         formControlName="firstName"
         [errorStateMatcher]="defaultMatcher"
+        autocomplete="given-name"
       />
     </mat-form-field>
 
@@ -38,6 +41,7 @@
         name="lastName"
         formControlName="lastName"
         [errorStateMatcher]="defaultMatcher"
+        autocomplete="family-name"
       />
     </mat-form-field>
     }
@@ -50,6 +54,7 @@
         formControlName="password"
         type="password"
         [errorStateMatcher]="defaultMatcher"
+        autocomplete="current-password"
       />
     </mat-form-field>
 
@@ -84,5 +89,11 @@
     >
       @if (needToRegister){ I have an account. } @else { I need an account. }
     </button>
+
+    @if(isLoading){
+    <div class="spinner-container">
+      <mat-spinner></mat-spinner>
+    </div>
+    }
   </form>
 </div>

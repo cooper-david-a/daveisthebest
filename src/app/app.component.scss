@@ -1,7 +1,22 @@
-.spacer {
-  flex: 1 1 auto;
-}
-
-mat-toolbar > a {
-  text-decoration: none;
+mat-sidenav-container {
+  mat-sidenav-content {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    .header {
+      .spacer {
+        flex: 1 1 auto;
+      }
+      a {
+        text-decoration: none;
+      }
+      mat-divider {
+        height: 75%;
+        margin: 0 2ch 0 2ch;
+      }
+    }
+    .comments-divider {
+      margin-top: auto;
+    }
+  }
 }
