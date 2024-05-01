@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 
-import { CommentsComponent } from './comments/comments.component';
 import { AuthService } from './services/auth.service';
 
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -25,7 +24,6 @@ import { MatMenuModule } from '@angular/material/menu';
     MatMenuModule,
     RouterLink,
     RouterOutlet,
-    CommentsComponent,
   ],
 })
 export class AppComponent {
