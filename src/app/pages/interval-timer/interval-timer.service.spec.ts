@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { HiitTimerService } from './hiit-timer.service';
+import { IntervalTimerService } from './interval-timer.service';
 
-describe('HiitTimerService', () => {
-  let service: HiitTimerService;
+describe('IntervalTimerService', () => {
+  let service: IntervalTimerService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(HiitTimerService);
+    service = TestBed.inject(IntervalTimerService);
   });
 
   it('should be created', () => {

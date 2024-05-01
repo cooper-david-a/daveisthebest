@@ -1,0 +1,72 @@
+<div class="dialog-container" [class.updating]="isUpdating">
+
+  @if(isLoading){
+  <div class="spinner-box">
+    <mat-spinner></mat-spinner>
+  </div>
+  }
+
+  <div
+    class="mat-elevation-z8"
+    [hidden]="isLoading"
+  >
+    <table mat-table [dataSource]="dataSource">
+      <!-- Delete Button-->
+      <ng-container matColumnDef="delete-button">
+        <td mat-cell *matCellDef="let schedule">
+          <button mat-icon-button (click)="delete(schedule)" [disabled]="isUpdating">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+        <td mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+
+      <!-- Title Column -->
+      <ng-container matColumnDef="title">
+        <td mat-cell *matCellDef="let schedule">
+          <button
+            mat-flat-button
+            (click)="dialogRef.close({ oldSchedule: schedule, isNew: false })"
+            [disabled]="isUpdating"
+          >
+            {{ schedule.title }}
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- Table Title -->
+      <ng-container matColumnDef="tableTitle">
+        <th mat-header-cell *matHeaderCellDef colspan="2">
+          Save:
+          {{ service.MAX_ALLOWED_SCHEDULES - service.schedules.length }} Slots
+          Available
+        </th>
+      </ng-container>
+
+      <!-- Footer for New Schedule Button -->
+      <ng-container matColumnDef="newSchedule">
+        <td mat-footer-cell *matFooterCellDef>
+          <button
+            mat-flat-button
+            (click)="dialogRef.close({ oldSchedule: {}, isNew: true })"
+            [disabled]="isUpdating"
+          >
+            New Schedule
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- Empty Cell -->
+      <ng-container matColumnDef="blank">
+        <td mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="['tableTitle']"></tr>
+      <tr
+        mat-row
+        *matRowDef="let schedule; columns: ['delete-button', 'title']"
+      ></tr>
+      <tr mat-footer-row *matFooterRowDef="['blank', 'newSchedule']"></tr>
+    </table>
+  </div>
+</div>

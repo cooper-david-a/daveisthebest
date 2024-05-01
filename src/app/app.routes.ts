@@ -2,11 +2,6 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
-    path: '',
-    loadComponent: () =>
-      import('./pages/home/home.component').then((m) => m.HomeComponent),
-  },
-  {
     path: 'login',
     loadComponent: () =>
       import('./login-form/login-form.component').then(
@@ -14,10 +9,10 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'hiit-timer',
+    path: 'interval-timer',
     loadComponent: () =>
-      import('./pages/hiit-timer/hiit-timer.component').then(
-        (m) => m.HiitTimerComponent
+      import('./pages/interval-timer/interval-timer.component').then(
+        (m) => m.IntervalTimerComponent
       ),
   },
   {
@@ -26,5 +21,15 @@ export const routes: Routes = [
       import(
         './pages/thermodynamic-property-calculator/thermodynamic-property-calculator.component'
       ).then((m) => m.ThermodynamicPropertyCalculatorComponent),
+  },
+  {
+    path: '',
+    loadComponent: () =>
+      import('./pages/home/home.component').then((m) => m.HomeComponent),
+  },
+  {
+    path: '**',
+    loadComponent: () =>
+      import('./pages/page-not-found/page-not-found.component').then((m) => m.PageNotFoundComponent),
   },
 ];

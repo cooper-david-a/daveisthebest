@@ -7,13 +7,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 
 import { HomeDashboardComponent } from './home-dashboard.component';
+import { ActivatedRoute} from '@angular/router';
+import { MockActivatedRoute } from 'src/testing/mockResources';
 
 describe('HomeDashboardComponent', () => {
   let component: HomeDashboardComponent;
   let fixture: ComponentFixture<HomeDashboardComponent>;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
+    TestBed.configureTestingModule({providers:[{provide: ActivatedRoute, useClass: MockActivatedRoute}],
     imports: [
         NoopAnimationsModule,
         MatButtonModule,
@@ -33,6 +35,8 @@ describe('HomeDashboardComponent', () => {
   });
 
   it('should compile', () => {
+    const mockActivatedRoute = TestBed.inject(MockActivatedRoute);
+    mockActivatedRoute.setParams({});
     expect(component).toBeTruthy();
   });
 });

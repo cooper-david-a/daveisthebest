@@ -1,45 +1,41 @@
-import { Injectable, OnInit, PLATFORM_ID } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, shareReplay, map } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { isPlatformBrowser } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Injectable, PLATFORM_ID, inject } from '@angular/core';
+import { Observable, concat, map, shareReplay } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService implements OnInit {
+export class AuthService {
   baseUrl = environment.apiUrl + 'auth/';
-  currentUser = new BehaviorSubject<User | null>(null);
-  tokens = new BehaviorSubject<AuthTokens | null>(null);
+  currentUser: User | null = null;
+  http: HttpClient = inject(HttpClient);
+  platformId = inject(PLATFORM_ID);
 
-  constructor(private http: HttpClient) {
-    if (isPlatformBrowser(PLATFORM_ID)) {
-      console.log('auth service constructor');
-      this.loadTokensFromStorage();
-      this.getMe();
+  loginUrl = 'jwt/create/';
+  meUrl = 'users/me/';
+
+  constructor() {
+    if (isPlatformBrowser(this.platformId) && this.isLoggedIn) {
+      concat(this.doRefreshToken(), this.getCurentUserFromServer()).subscribe();
     }
   }
-  ngOnInit(): void {
-    console.log('auth service ngOnInit');
+
+  login(username: string, password: string): Observable<void | User> {
+    return concat(
+      this.getTokensFromServer(username, password),
+      this.getCurentUserFromServer()
+    ).pipe(shareReplay());
   }
 
-  login(username: string, password: string) {
-    const loginUrl = 'jwt/create/';
-    return this.http
-      .post<AuthTokens>(this.baseUrl + loginUrl, {
-        username: username,
-        password: password,
-      })
-      .pipe(
-        shareReplay(),
-        map((tokens) => {
-          this.tokens.next(tokens);
-          this.saveTokens(tokens);
-          this.getMe();
-          this.startRefreshTokenTimer();
-          return tokens;
-        })
-      );
+  logout() {
+    this.stopRefreshTokenTimer();
+    this.currentUser = null;
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+    }
   }
 
   register(user: User) {
@@ -49,112 +45,103 @@ export class AuthService implements OnInit {
       .pipe(shareReplay());
   }
 
-  logout() {
-    this.stopRefreshTokenTimer();
-    localStorage.removeItem('access');
-    localStorage.removeItem('accessTokenExpiresAt');
-    localStorage.removeItem('refresh');
-    localStorage.removeItem('refreshTokenExpiresAt');
-    this.tokens.next(null);
-    this.currentUser.next(null);
-  }
-
-  refresh() {
+  doRefreshToken() {
     const refreshUrl = 'jwt/refresh/';
-    const tokens = this.tokens.getValue();
+
+    this.stopRefreshTokenTimer();
+
+    const refreshTokenString = isPlatformBrowser(this.platformId)
+      ? localStorage.getItem('refreshToken')
+      : null;
+
     return this.http
-      .post<AuthTokens>(this.baseUrl + refreshUrl, {
-        refresh: tokens?.refresh,
+      .post<TokenStrings>(this.baseUrl + refreshUrl, {
+        refresh: refreshTokenString,
       })
       .pipe(
-        map((tokens) => {
-          this.saveTokens(tokens);
-          return tokens;
+        map((token) => {
+          localStorage.setItem('accessToken', token.access);
         })
       );
   }
 
-  saveTokens(tokens: AuthTokens) {
-    localStorage.setItem('access', tokens.access);
-    localStorage.setItem(
-      'accessTokenExpiresAt',
-      tokens.accessTokenExpiresAt.toString()
-    );
-    if (tokens.refresh) {
-      localStorage.setItem('refresh', tokens.refresh);
-    }
-    if (tokens.refreshTokenExpiresAt) {
-      localStorage.setItem(
-        'refreshTokenExpiresAt',
-        tokens.refreshTokenExpiresAt.toString()
+  getTokensFromServer(username: string, password: string): Observable<void> {
+    return this.http
+      .post<TokenStrings>(this.baseUrl + this.loginUrl, {
+        username: username,
+        password: password,
+      })
+      .pipe(
+        map((tokenStrings: TokenStrings) => {
+          if (isPlatformBrowser(this.platformId)) {
+            localStorage.setItem('accessToken', tokenStrings.access);
+            localStorage.setItem('refreshToken', tokenStrings.refresh ?? '');
+          }
+        })
       );
+  }
+
+  getCurentUserFromServer(): Observable<User> {
+    return this.http
+      .get<User>(this.baseUrl + this.meUrl)
+      .pipe(map((user) => (this.currentUser = user)));
+  }
+
+  get isLoggedIn() {
+    let refreshToken = isPlatformBrowser(this.platformId) ? localStorage.getItem('refreshToken') : null;
+    if (refreshToken) {
+      let refreshTokenBody: TokenBodyObject = JSON.parse(
+        atob(refreshToken.split('.')[1])
+      );
+      return new Date(refreshTokenBody.exp * 1000) > new Date();
     }
+    return false;
   }
-
-  getMe() {
-    const meUrl = 'users/me/';
-    this.http
-      .get<User>(this.baseUrl + meUrl)
-      .subscribe((me) => this.currentUser.next(me));
-  }
-
-  isLoggedIn() {
-    return !!this.currentUser.getValue();
-  }
-
-  //helper methods
 
   private refreshTokenTimeout!: NodeJS.Timeout;
 
   private startRefreshTokenTimer() {
-    let tokens = this.tokens.getValue();
-    // set a timeout to refresh the token a minute before it expires
-    if (tokens) {
-      const expires = tokens.accessTokenExpiresAt;
-      const timeout = expires - Date.now() / 1000 - 60;
-      this.refreshTokenTimeout = setTimeout(
-        () => this.refresh().subscribe(),
-        timeout * 1000
-      );
+    if (isPlatformBrowser(this.platformId)) {
+      // set a timeout to refresh the token a minute before it expires
+      try {
+        const accessTokenString =
+          localStorage.getItem('accessToken')?.split('.')[1] ?? '';
+        const accessTokenObject: TokenBodyObject = JSON.parse(
+          atob(accessTokenString)
+        );
+        const timeout = accessTokenObject.exp - Date.now() / 1000 - 60;
+        this.refreshTokenTimeout = setTimeout(
+          () => this.doRefreshToken().subscribe(),
+          timeout * 1000
+        );
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 
   private stopRefreshTokenTimer() {
     clearTimeout(this.refreshTokenTimeout);
   }
-
-  private loadTokensFromStorage() {
-    let access = localStorage.getItem('access');
-    let accessTokenExpiresAt = Number(
-      localStorage.getItem('accessTokenExpiresAt')
-    );
-    let refresh = localStorage.getItem('refresh');
-    let refreshTokenExpiresAt = Number(
-      localStorage.getItem('refreshTokenExpiresAt')
-    );
-    if (access && refresh) {
-      this.tokens.next({
-        access,
-        accessTokenExpiresAt,
-        refresh,
-        refreshTokenExpiresAt,
-      });
-      this.startRefreshTokenTimer();
-    }
-  }
 }
 
-interface AuthTokens {
-  refresh?: string;
-  refreshTokenExpiresAt?: number;
-  access: string;
-  accessTokenExpiresAt: number;
-}
-
-interface User {
+export interface User {
   username: string;
   email: string;
   password?: string;
   firstName: string;
   lastName: string;
+}
+
+interface TokenBodyObject {
+  token_type: string;
+  exp: number;
+  iat: number;
+  jti: string;
+  user_id: number;
+}
+
+interface TokenStrings {
+  access: string;
+  refresh?: string;
 }

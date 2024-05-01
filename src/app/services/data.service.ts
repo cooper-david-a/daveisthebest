@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, InjectionToken } from '@angular/core';
 import {
   HttpClient,
   HttpErrorResponse,
@@ -11,15 +11,17 @@ import { catchError } from 'rxjs/operators';
 import { AppError } from '../common/app-error';
 import { NotFoundError } from '../common/not-found-error';
 import { BadInputError } from '../common/bad-input-error';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataService {
-  baseURL = 'http://localhost:8000/';
+  baseURL = environment.apiUrl;
   url!: string;
+
   constructor(
-    @Inject(String) relativeRoute: string,
+    @Inject(RELATIVE_ROUTE) relativeRoute: string,
     private http: HttpClient
   ) {
     this.url = this.baseURL + relativeRoute;
@@ -30,24 +32,41 @@ export class DataService {
     return this.http.get(this.url, options).pipe(catchError(this.handleError));
   }
 
-  create(resource: Object): Observable<Object> {
+  get(resourceId: number | string, headers?: HttpHeaders): Observable<Object> {
+    let options = headers ? { headers: headers } : {};
     return this.http
-      .post(this.url, resource)
+      .get(this.url + resourceId, options)
       .pipe(catchError(this.handleError));
   }
 
-  update(resourceId: number, fields: Object) {
-    return this.http.patch(this.url + '/' + resourceId, JSON.stringify(fields));
+  create(resource: Object, headers?: HttpHeaders): Observable<Object> {
+    let options = headers ? { headers: headers } : {};
+    return this.http
+      .post(this.url, resource, options)
+      .pipe(catchError(this.handleError));
   }
 
-  delete(id: number): Observable<Object> {
+  update(
+    resourceId: number | string,
+    fields: Object,
+    headers?: HttpHeaders
+  ): Observable<Object> {
+    let options = headers ? { headers: headers } : {};
+    return this.http.patch(
+      this.url + resourceId + '/',
+      fields,
+      options
+    );
+  }
+
+  delete(id: number | string, headers?: HttpHeaders): Observable<Object> {
+    let options = headers ? { headers: headers } : {};
     return this.http
-      .delete(this.url + '/' + id)
+      .delete(this.url + id, options)
       .pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse) {
-    console.log(error);
     if (error.status === 400) {
       return throwError(() => new BadInputError(error));
     }
@@ -59,3 +78,5 @@ export class DataService {
     return throwError(() => new AppError(error));
   }
 }
+
+export const RELATIVE_ROUTE = new InjectionToken<string>('relativeRoute');

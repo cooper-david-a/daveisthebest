@@ -1,0 +1,56 @@
+<div class="dialog-container" [class.updating]="isUpdating">
+  @if(isLoading){
+  <div class="spinner-box">
+    <mat-spinner></mat-spinner>
+  </div>
+  }
+
+  <div class="mat-elevation-z8" [hidden]="isLoading">
+    <table mat-table [dataSource]="dataSource">
+      <!-- Loading -->
+      <ng-container matColumnDef="loading">
+        <td mat-cell *matCellDef="let schedule">
+          @if(isLoading){ <mat-spinner></mat-spinner>}
+        </td>
+      </ng-container>
+
+      <!-- Delete Button-->
+      <ng-container matColumnDef="delete-button">
+        <td mat-cell *matCellDef="let schedule">
+          <button
+            mat-icon-button
+            (click)="delete(schedule)"
+            [disabled]="isUpdating"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- Title Column -->
+      <ng-container matColumnDef="title">
+        <td mat-cell *matCellDef="let schedule">
+          <button
+            mat-flat-button
+            (click)="dialogRef.close(schedule)"
+            [disabled]="isUpdating"
+          >
+            {{ schedule.title }}
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- Table Title -->
+      <ng-container matColumnDef="tableTitle">
+        <th mat-header-cell *matHeaderCellDef colspan="2">
+          Open one of your schedules:<br>
+          {{ service.MAX_ALLOWED_SCHEDULES - service.schedules.length }} Slots
+          Available
+        </th>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="['tableTitle']"></tr>
+      <tr mat-row *matRowDef="let schedule; columns: displayedColumns"></tr>
+    </table>
+  </div>
+</div>

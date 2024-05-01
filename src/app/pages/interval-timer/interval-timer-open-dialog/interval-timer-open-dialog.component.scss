@@ -12,7 +12,8 @@
   }
 }
 
-.mat-mdc-row:hover {
-  @include mat.elevation(10);
-  cursor: pointer;
+.updating {
+  * {
+    cursor: wait;
+  }
 }

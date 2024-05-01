@@ -4,7 +4,7 @@
   margin: 5px auto 5px auto;
   max-width: 800px;
   min-width: 300px;
-  width: 100%;
+  width: 95%;
   @include mat.elevation(8);
   padding: 5px;
   border-radius: 5px;
@@ -72,6 +72,12 @@ mat-progress-bar {
   button {
     flex: 1 0 20%;
     font-size: large;
+  }
+  div{
+    flex:1 0 20%;
+    button{
+      width: 100%;
+    }
   }
 }
 

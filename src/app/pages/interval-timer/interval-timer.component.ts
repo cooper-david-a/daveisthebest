@@ -1,5 +1,7 @@
 import {
+  AfterContentInit,
   Component,
+  ElementRef,
   OnInit,
   PLATFORM_ID,
   ViewChild,
@@ -21,8 +23,8 @@ import {
 } from '@angular/material/dialog';
 import { MatTable, MatTableModule } from '@angular/material/table';
 
-import { HiitTimerOpenDialogComponent } from './hiit-timer-open-dialog/hiit-timer-open-dialog.component';
-import { HiitTimerService, Schedule, Row } from './hiit-timer.service';
+import { IntervalTimerOpenDialogComponent } from './interval-timer-open-dialog/interval-timer-open-dialog.component';
+import { IntervalTimerService, Schedule, Row } from './interval-timer.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { StopwatchPipe } from '../../pipes/stopwatch.pipe';
 import { MatInputModule } from '@angular/material/input';
@@ -32,11 +34,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { isPlatformBrowser } from '@angular/common';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { IntervalTimerSaveDialogComponent } from './interval-timer-save-dialog/interval-timer-save-dialog.component';
 
 @Component({
-  selector: 'hiit-timer',
-  templateUrl: './hiit-timer.component.html',
-  styleUrls: ['./hiit-timer.component.scss'],
+  selector: 'interval-timer',
+  templateUrl: './interval-timer.component.html',
+  styleUrls: ['./interval-timer.component.scss'],
   standalone: true,
   imports: [
     MatProgressBarModule,
@@ -49,11 +53,12 @@ import { isPlatformBrowser } from '@angular/common';
     MatTableModule,
     StopwatchPipe,
     MatDialogModule,
+    MatTooltipModule,
   ],
 })
-export class HiitTimerComponent implements OnInit {
+export class IntervalTimerComponent implements OnInit {
   scheduleForm = new FormGroup({
-    title: new FormControl<string>('', {
+    title: new FormControl<string>('title', {
       validators: [Validators.required, Validators.maxLength(100)],
       nonNullable: true,
     }),
@@ -77,7 +82,6 @@ export class HiitTimerComponent implements OnInit {
   });
 
   warmupCooldownDescShown = false;
-
   running = false;
   startTime!: number;
   timeRemaining = 0;
@@ -90,19 +94,20 @@ export class HiitTimerComponent implements OnInit {
   roundIndex = 0;
   timer!: NodeJS.Timeout;
   progress = 0;
-  bell = isPlatformBrowser(PLATFORM_ID)
-    ? new Audio('../assets/Bell.wav')
-    : { play: () => {} };
 
   displayedColumns = ['expand', 'hard', 'easy', 'rounds'];
   expandedRowIndex!: number | null;
   @ViewChild(MatTable) table!: MatTable<Row>;
 
+  @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
+
   constructor(
     public openScheduleDialog: MatDialog,
+    public saveScheduleDialog: MatDialog,
     public authService: AuthService,
-    private service: HiitTimerService
-  ) {}
+    private service: IntervalTimerService
+  ) {
+  }
 
   ngOnInit(): void {
     this.generateTimer();
@@ -156,16 +161,27 @@ export class HiitTimerComponent implements OnInit {
 
   saveSchedule() {
     if (this.scheduleForm.valid) {
-      this.service.saveSchedule(this.scheduleForm.getRawValue());
+      const fields = this.scheduleForm.getRawValue();
+      const dialogRef = this.saveScheduleDialog.open(
+        IntervalTimerSaveDialogComponent
+      );
+
+      dialogRef
+        .afterClosed()
+        .subscribe((result?: {oldSchedule:Schedule, isNew: boolean }) => {
+          if (result && result.isNew) {
+            this.service.createSchedule(fields).subscribe();
+          } else if(result) {
+            const id = result.oldSchedule.id ?? 0;
+            this.service.updateSchedule(id, fields).subscribe();
+          }
+        });
     }
   }
 
   openSchedule() {
     const dialogRef = this.openScheduleDialog.open(
-      HiitTimerOpenDialogComponent,
-      {
-        width: '80vw',
-      }
+      IntervalTimerOpenDialogComponent
     );
 
     dialogRef.afterClosed().subscribe((schedule: Schedule) => {
@@ -176,6 +192,7 @@ export class HiitTimerComponent implements OnInit {
         while (schedule.rows.length > this.rows.length) this.addRow();
         schedule.rows.forEach((row) => delete row.id);
         this.scheduleForm.setValue(schedule);
+        this.scheduleForm.markAsTouched();
         this.table.renderRows();
         this.generateTimer();
       }
@@ -243,7 +260,7 @@ export class HiitTimerComponent implements OnInit {
   }
 
   play() {
-    this.bell.play();
+    this.audioPlayer.nativeElement.play();
     this.startTime = new Date().getTime();
     this.timer = setInterval(() => this.update(), 100);
   }
@@ -262,12 +279,12 @@ export class HiitTimerComponent implements OnInit {
       this.roundIndex = this.elapsedTimeBreakpointArray.findIndex(
         (t) => t > this.timeElapsed
       );
-      if (this.roundIndex > oldRoundIndex) this.bell.play();
+      if (this.roundIndex > oldRoundIndex) this.audioPlayer.nativeElement.play();
       this.roundTimeRemaining =
         this.flatRoundsArray[this.roundIndex].duration - this.timeElapsed;
       this.progress = (this.timeElapsed / this.totalTime) * 100;
       if (this.roundIndex < 0) {
-        this.bell.play();
+        this.audioPlayer.nativeElement.play();
         this.stop();
       }
     }

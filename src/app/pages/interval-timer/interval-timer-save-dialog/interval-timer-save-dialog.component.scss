@@ -1,0 +1,19 @@
+@use "@angular/material" as mat;
+
+.spinner-box {
+  display: flex;
+  justify-content: center;
+}
+
+.filter-box {
+  display: flex;
+  mat-form-field {
+    flex: 1 0 auto;
+  }
+}
+
+.updating {
+  * {
+    cursor: wait;
+  }
+}

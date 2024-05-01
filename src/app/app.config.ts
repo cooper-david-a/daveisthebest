@@ -5,19 +5,17 @@ import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import {
-  HTTP_INTERCEPTORS,
   provideHttpClient,
   withFetch,
-  withInterceptorsFromDi,
+  withInterceptors,
 } from '@angular/common/http';
-import { AuthInterceptor } from './auth.interceptor';
+import { authInterceptor } from './interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes, withComponentInputBinding()),
     provideClientHydration(),
     provideAnimationsAsync(),
-    provideHttpClient(withFetch(), withInterceptorsFromDi()),
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
   ],
 };

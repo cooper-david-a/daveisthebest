@@ -1,26 +1,35 @@
 <mat-sidenav-container>
   <mat-sidenav-content>
-    <mat-toolbar color="primary" class="header">
-      <button mat-icon-button aria-label="icon-button with menu icon">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <a mat-button [routerLink]="['/']">Dave Is The Best!?</a>
-      <mat-divider [vertical]="true"></mat-divider>
+    <mat-toolbar class="header" color="primary">
+      <a mat-flat-button color="primary" [routerLink]="['/']"
+        >Dave Is The Best!?</a
+      >
       <span class="spacer"></span>
 
-      @if(authService.currentUser.getValue()){
-      <span
-        >Logged in as: {{ authService.currentUser.getValue()?.username }}</span
+      @if(authService.currentUser){
+      <button
+        mat-flat-button
+        color="primary"
+        [matMenuTriggerFor]="menu"
+        aria-label="Account information"
+        class="account-button"
       >
-      <mat-divider [vertical]="true"></mat-divider>
-      <button mat-button (click)="authService.logout()">Logout</button>}@else{
-      <a mat-button [routerLink]="['/login']">Login</a>
+        {{ authService.currentUser.username }}
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="authService.logout()">Logout</button>
+      </mat-menu>
+      }@else {
+      <a mat-flat-button color="primary" [routerLink]="['/login']">Login</a>
       }
     </mat-toolbar>
+
     <router-outlet></router-outlet>
 
     <mat-divider class="comments-divider"></mat-divider>
+
     <comments></comments>
+
     <mat-toolbar color="primary" class="footer"></mat-toolbar>
   </mat-sidenav-content>
 </mat-sidenav-container>
