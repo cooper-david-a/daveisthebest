@@ -1,0 +1,54 @@
+<div class="container">
+  <h4>
+    {{ commentInput().commenter }} -
+    {{ commentInput().dateEntered | timeSince }}
+  </h4>
+
+  <p>{{ commentInput().commentText }}</p>
+
+  <div class="tooltip-target"
+    matTooltip="Login to leave a reply."
+    [matTooltipDisabled]="authService.isLoggedIn"
+    #openTooltip="matTooltip"
+    (click)="openTooltip.toggle()"
+  >
+    <button
+      mat-icon-button
+      (click)="toggleHideForm()"
+      [disabled]="!authService.isLoggedIn"
+    >
+      @if(formHidden){<mat-icon>reply</mat-icon>}@else{<mat-icon>close</mat-icon>}
+    </button>
+  </div>
+
+  <comment-form
+    [hidden]="formHidden"
+    [parentCommentId]="commentInput().id"
+  ></comment-form>
+
+  <div class="reply-expansion">
+    @if(commentInput().replies.length > 0){
+    <toggle-expansion-button
+      (click)="toggleRepliesHidden()"
+      [open]="repliesHidden"
+      color="primary"
+    ></toggle-expansion-button>
+    <span>
+      {{
+        commentInput().replies.length > 1
+          ? commentInput().replies.length + " Replies"
+          : "1 Reply"
+      }}
+    </span>
+    }
+  </div>
+
+  <div class="replies">
+    @for(replyId of commentInput().replies; track replyId){
+    <comment
+      [commentInput]="commentService.comments()[replyId]"
+      [hidden]="repliesHidden"
+    ></comment>
+    }
+  </div>
+</div>

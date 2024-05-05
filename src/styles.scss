@@ -3,6 +3,10 @@
 @use "./themes/dark-theme.scss" as dark;
 @use "./themes/light-theme.scss" as light;
 
+@use '@fireflysemantics/sass-logger' as logger;
+
+@debug logger.pretty-map(dark.$dark-theme);
+
 @include mat.core();
 
 html,

@@ -1,0 +1,27 @@
+@use "@angular/material" as mat;
+@use "src/themes/dark-theme.scss" as dark;
+@use "src/themes/light-theme.scss" as light;
+
+div{
+  width: fit-content;
+  height: fit-content;
+  cursor: pointer;
+  border-radius: 20%;
+}
+
+.primary{
+  background-color: mat.get-theme-color(dark.$dark-theme,primary,default);
+}
+
+.accent{
+  background-color: mat.get-theme-color(dark.$dark-theme,accent,default);
+}
+
+@media (prefers-color-scheme: light) {
+  .primary{
+    background-color: mat.get-theme-color(light.$light-theme,primary,default);
+  }
+  .accent{
+    background-color: mat.get-theme-color(light.$light-theme,accent,default);
+  }
+}

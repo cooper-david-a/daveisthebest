@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
+import { CommentsComponent } from './comments/comments/comments.component';
 
 @Component({
   selector: 'app-root',
@@ -24,6 +25,7 @@ import { MatMenuModule } from '@angular/material/menu';
     MatMenuModule,
     RouterLink,
     RouterOutlet,
+    CommentsComponent
   ],
 })
 export class AppComponent {

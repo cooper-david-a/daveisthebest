@@ -1,0 +1,22 @@
+@use "@angular/material" as mat;
+@use "src/themes/dark-theme.scss" as dark;
+@use "src/themes/light-theme.scss" as light;
+
+.container {
+  border: 1px solid mat.get-theme-color(dark.$dark-theme, foreground, divider);
+  border-radius: 5px;
+  padding: 0 1ch 0 1ch;
+  margin: 0.5em 0 0.5em 0;
+  .tooltip-target {
+    width: fit-content;
+  }
+  .reply-expansion {
+    display: flex;
+    align-items: center;
+    gap: 1ch;
+  }
+  .replies {
+    margin-top: 1em;
+    margin-left: 2ch;
+  }
+}

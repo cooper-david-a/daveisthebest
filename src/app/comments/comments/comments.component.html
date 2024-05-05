@@ -1,0 +1,9 @@
+<div class="container">
+  <h2>Comments</h2>
+
+  <comment-form></comment-form>
+
+  @for(comment of commentService.threads(); track comment){
+  <comment [commentInput]="comment"></comment>
+  }
+</div>

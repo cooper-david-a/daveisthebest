@@ -1,5 +1,5 @@
 <audio #audioPlayer>
-  <source src="../../../assets/Bell.wav" type="audio/wav">
+  <source src="../../../assets/Bell.wav" type="audio/wav" />
 </audio>
 <div class="container">
   <section class="timer">
@@ -45,12 +45,26 @@
       <button mat-flat-button color="primary" (click)="deleteRow(true)">
         Delete Row
       </button>
-      <button mat-flat-button color="primary" (click)="openSchedule()">
-        Open Timer
-      </button>
+      <div
+        matTooltip="Login to open a schedule."
+        [matTooltipDisabled]="authService.isLoggedIn"
+        #openTooltip="matTooltip"
+        (click)="openTooltip.toggle()"
+      >
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="openSchedule()"
+          [disabled]="!authService.isLoggedIn"
+        >
+          Open Timer
+        </button>
+      </div>
       <div
         matTooltip="Login to save your schedule."
         [matTooltipDisabled]="authService.isLoggedIn"
+        #saveTooltip="matTooltip"
+        (click)="saveTooltip.toggle()"
       >
         <button
           mat-flat-button

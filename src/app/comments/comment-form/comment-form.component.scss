@@ -1,0 +1,13 @@
+form{
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border-radius: 5px;
+  div{
+    width: fit-content;
+  }
+
+  mat-form-field{
+    flex-grow: 1;
+  }
+}

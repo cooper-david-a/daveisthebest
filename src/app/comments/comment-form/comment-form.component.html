@@ -1,0 +1,20 @@
+<form [formGroup]="form" class="mat-elevation-z8">
+  <mat-form-field appearance="fill">
+    <mat-label>Comment</mat-label>
+    <textarea matInput formControlName="commentText"></textarea>
+  </mat-form-field>
+  <div
+    matTooltip="Login to leave a comment."
+    [matTooltipDisabled]="authService.isLoggedIn"
+    #openTooltip="matTooltip"
+    (click)="openTooltip.toggle()"
+  >
+    <button
+      mat-icon-button
+      (click)="postComment()"
+      [disabled]="!authService.isLoggedIn || form.invalid"
+    >
+      <mat-icon>send</mat-icon>
+    </button>
+  </div>
+</form>
