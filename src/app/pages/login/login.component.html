@@ -71,8 +71,27 @@
     </mat-form-field>
     }
 
+    <!-- Error list -->
+    @if(errorMessages.length){
+      <ul class="error-messages">
+        <p>Error</p>
+        @for(message of errorMessages; track message){
+          <li>{{ message }}</li>
+        }
+      </ul>
+    }
+
+    <!-- Success message -->
+    @if (successMessage){
+    <p class="success-message">{{ successMessage }}</p>
+    }
+
+    <!-- Loading indicator -->
+    @if (isLoading){
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+
     <button
-      class="login-button"
       mat-raised-button
       color="primary"
       [disabled]="!loginForm.valid"
@@ -81,19 +100,18 @@
       @if (needToRegister){ Register } @else { Login }
     </button>
 
-    <button
-      class="need-to-register-button"
-      mat-raised-button
-      color="primary"
-      (click)="registerOrLogin()"
-    >
+    <button mat-raised-button color="primary" (click)="registerOrLogin()">
       @if (needToRegister){ I have an account. } @else { I need an account. }
     </button>
 
-    @if(isLoading){
-    <div class="spinner-container">
-      <mat-spinner></mat-spinner>
-    </div>
+    @if (!needToRegister){
+    <button
+      class="reset-password-button"
+      mat-raised-button
+      (click)="resetPassword()"
+    >
+      I forgot my password.
+    </button>
     }
   </form>
 </div>

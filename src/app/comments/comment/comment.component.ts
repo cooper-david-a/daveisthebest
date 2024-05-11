@@ -5,7 +5,7 @@ import { TimeSincePipe } from '../../pipes/time-since.pipe';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { ToggleExpansionButtonComponent } from '../../toggle-expansion-button/toggle-expansion-button.component';
+import { ToggleExpansionButtonComponent } from '../../common/toggle-expansion-button/toggle-expansion-button.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
 

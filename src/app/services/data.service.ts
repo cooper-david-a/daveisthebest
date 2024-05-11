@@ -8,9 +8,9 @@ import {
 import { throwError, Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { AppError } from '../common/app-error';
-import { NotFoundError } from '../common/not-found-error';
-import { BadInputError } from '../common/bad-input-error';
+import { AppError } from '../common/errors/app-error';
+import { NotFoundError } from '../common/errors/not-found-error';
+import { BadInputError } from '../common/errors/bad-input-error';
 import { environment } from '../../environments/environment';
 
 @Injectable({

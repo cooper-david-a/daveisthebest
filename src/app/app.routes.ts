@@ -4,8 +4,20 @@ export const routes: Routes = [
   {
     path: 'login',
     loadComponent: () =>
-      import('./login-form/login-form.component').then(
-        (m) => m.LoginFormComponent
+      import('./pages/login/login.component').then((m) => m.LoginComponent),
+  },
+  {
+    path: 'activate-account/:uid/:token',
+    loadComponent: () =>
+      import('src/app/pages/login/activate-account/activate-account.component').then(
+        (m) => m.ActivateAccountComponent
+      ),
+  },
+  {
+    path: 'password-reset/:uid/:token',
+    loadComponent: () =>
+      import('src/app/pages/login/password-reset/password-reset.component').then(
+        (m) => m.PasswordResetComponent
       ),
   },
   {
@@ -30,6 +42,8 @@ export const routes: Routes = [
   {
     path: '**',
     loadComponent: () =>
-      import('./pages/page-not-found/page-not-found.component').then((m) => m.PageNotFoundComponent),
+      import('./pages/page-not-found/page-not-found.component').then(
+        (m) => m.PageNotFoundComponent
+      ),
   },
 ];

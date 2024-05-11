@@ -15,6 +15,10 @@ export class AuthService {
 
   loginUrl = 'jwt/create/';
   meUrl = 'users/me/';
+  registerUrl = 'users/';
+  activationUrl = 'users/activation/';
+  resetPasswordUrl = 'users/reset_password/';
+  resetPasswordConfirmUrl = 'users/reset_password_confirm/';
 
   constructor() {
     if (isPlatformBrowser(this.platformId) && this.isLoggedIn) {
@@ -39,10 +43,29 @@ export class AuthService {
   }
 
   register(user: User) {
-    const registerUrl = 'users/';
     return this.http
-      .post<User>(this.baseUrl + registerUrl, user)
+      .post<User>(this.baseUrl + this.registerUrl, user)
       .pipe(shareReplay());
+  }
+
+  activate(uid: string, token: string) {
+    return this.http
+      .post(this.baseUrl + this.activationUrl, { uid: uid, token: token })
+      .pipe(shareReplay());
+  }
+
+  resetPassword(email: string) {
+    return this.http
+      .post(this.baseUrl + this.resetPasswordUrl, { email: email })
+      .pipe(shareReplay());
+  }
+
+  resetPasswordConfirm(uid: string, token: string, newPassword: string) {
+    return this.http.post(this.baseUrl + this.resetPasswordConfirmUrl, {
+      uid: uid,
+      token: token,
+      newPassword: newPassword,
+    });
   }
 
   doRefreshToken() {
@@ -88,7 +111,9 @@ export class AuthService {
   }
 
   get isLoggedIn() {
-    let refreshToken = isPlatformBrowser(this.platformId) ? localStorage.getItem('refreshToken') : null;
+    let refreshToken = isPlatformBrowser(this.platformId)
+      ? localStorage.getItem('refreshToken')
+      : null;
     if (refreshToken) {
       let refreshTokenBody: TokenBodyObject = JSON.parse(
         atob(refreshToken.split('.')[1])

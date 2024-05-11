@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IntervalTimerService, Schedule } from '../interval-timer.service';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';

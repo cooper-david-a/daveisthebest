@@ -6,8 +6,10 @@
 
   <p>{{ commentInput().commentText }}</p>
 
-  <div class="tooltip-target"
+  <div
+    class="tooltip-target"
     matTooltip="Login to leave a reply."
+    matTooltipPosition="right"
     [matTooltipDisabled]="authService.isLoggedIn"
     #openTooltip="matTooltip"
     (click)="openTooltip.toggle()"
