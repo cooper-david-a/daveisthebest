@@ -1,7 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, PLATFORM_ID, inject } from '@angular/core';
-import { Observable, concat, map, shareReplay } from 'rxjs';
+import { Observable, concat, map, shareReplay, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -22,7 +22,11 @@ export class AuthService {
 
   constructor() {
     if (isPlatformBrowser(this.platformId) && this.isLoggedIn) {
-      concat(this.doRefreshToken(), this.getCurentUserFromServer()).subscribe();
+      concat(this.doRefreshToken(), this.getCurentUserFromServer()).subscribe(
+        (value) => {
+          if (!value) this.startRefreshTokenTimer();
+        }
+      );
     }
   }
 
@@ -30,7 +34,7 @@ export class AuthService {
     return concat(
       this.getTokensFromServer(username, password),
       this.getCurentUserFromServer()
-    ).pipe(shareReplay());
+    ).pipe(shareReplay(), tap((value)=>{if(!value)this.startRefreshTokenTimer();}));
   }
 
   logout() {
@@ -61,31 +65,13 @@ export class AuthService {
   }
 
   resetPasswordConfirm(uid: string, token: string, newPassword: string) {
-    return this.http.post(this.baseUrl + this.resetPasswordConfirmUrl, {
-      uid: uid,
-      token: token,
-      newPassword: newPassword,
-    });
-  }
-
-  doRefreshToken() {
-    const refreshUrl = 'jwt/refresh/';
-
-    this.stopRefreshTokenTimer();
-
-    const refreshTokenString = isPlatformBrowser(this.platformId)
-      ? localStorage.getItem('refreshToken')
-      : null;
-
     return this.http
-      .post<TokenStrings>(this.baseUrl + refreshUrl, {
-        refresh: refreshTokenString,
+      .post(this.baseUrl + this.resetPasswordConfirmUrl, {
+        uid: uid,
+        token: token,
+        newPassword: newPassword,
       })
-      .pipe(
-        map((token) => {
-          localStorage.setItem('accessToken', token.access);
-        })
-      );
+      .pipe(shareReplay());
   }
 
   getTokensFromServer(username: string, password: string): Observable<void> {
@@ -147,6 +133,27 @@ export class AuthService {
 
   private stopRefreshTokenTimer() {
     clearTimeout(this.refreshTokenTimeout);
+  }
+
+  private doRefreshToken() {
+    const refreshUrl = 'jwt/refresh/';
+
+    this.stopRefreshTokenTimer();
+
+    const refreshTokenString = isPlatformBrowser(this.platformId)
+      ? localStorage.getItem('refreshToken')
+      : null;
+
+    return this.http
+      .post<TokenStrings>(this.baseUrl + refreshUrl, {
+        refresh: refreshTokenString,
+      })
+      .pipe(
+        map((token) => {
+          localStorage.setItem('accessToken', token.access);
+          this.startRefreshTokenTimer();
+        })
+      );
   }
 }
 
