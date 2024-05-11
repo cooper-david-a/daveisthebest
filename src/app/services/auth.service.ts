@@ -14,6 +14,7 @@ export class AuthService {
   platformId = inject(PLATFORM_ID);
 
   loginUrl = 'jwt/create/';
+  refreshUrl = 'jwt/refresh/';
   meUrl = 'users/me/';
   registerUrl = 'users/';
   activationUrl = 'users/activation/';
@@ -21,12 +22,8 @@ export class AuthService {
   resetPasswordConfirmUrl = 'users/reset_password_confirm/';
 
   constructor() {
-    if (isPlatformBrowser(this.platformId) && this.isLoggedIn) {
-      concat(this.doRefreshToken(), this.getCurentUserFromServer()).subscribe(
-        (value) => {
-          if (!value) this.startRefreshTokenTimer();
-        }
-      );
+    if (isPlatformBrowser(this.platformId)) {
+      concat(this.doRefreshToken(), this.getCurentUserFromServer()).subscribe();
     }
   }
 
@@ -34,7 +31,12 @@ export class AuthService {
     return concat(
       this.getTokensFromServer(username, password),
       this.getCurentUserFromServer()
-    ).pipe(shareReplay(), tap((value)=>{if(!value)this.startRefreshTokenTimer();}));
+    ).pipe(
+      shareReplay(),
+      tap((value) => {
+        if (!value) this.startRefreshTokenTimer();
+      })
+    );
   }
 
   logout() {
@@ -97,12 +99,12 @@ export class AuthService {
   }
 
   get isLoggedIn() {
-    let refreshToken = isPlatformBrowser(this.platformId)
-      ? localStorage.getItem('refreshToken')
+    let accessToken = isPlatformBrowser(this.platformId)
+      ? localStorage.getItem('accessToken')
       : null;
-    if (refreshToken) {
+    if (accessToken) {
       let refreshTokenBody: TokenBodyObject = JSON.parse(
-        atob(refreshToken.split('.')[1])
+        atob(accessToken.split('.')[1])
       );
       return new Date(refreshTokenBody.exp * 1000) > new Date();
     }
@@ -136,8 +138,6 @@ export class AuthService {
   }
 
   private doRefreshToken() {
-    const refreshUrl = 'jwt/refresh/';
-
     this.stopRefreshTokenTimer();
 
     const refreshTokenString = isPlatformBrowser(this.platformId)
@@ -145,7 +145,7 @@ export class AuthService {
       : null;
 
     return this.http
-      .post<TokenStrings>(this.baseUrl + refreshUrl, {
+      .post<TokenStrings>(this.baseUrl + this.refreshUrl, {
         refresh: refreshTokenString,
       })
       .pipe(
