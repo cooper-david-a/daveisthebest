@@ -20,3 +20,9 @@
     margin-left: 2ch;
   }
 }
+
+@media (prefers-color-scheme: light) {
+  .container {
+    border: 1px solid mat.get-theme-color(light.$light-theme, foreground, divider);
+  }
+}

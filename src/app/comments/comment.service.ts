@@ -1,7 +1,7 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { DataService } from '../services/data.service';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map, tap } from 'rxjs';
+import { Observable, firstValueFrom, map, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +18,7 @@ export class CommentService {
   expandedReplies = new Set<number>([]);
 
   constructor() {
-    this.getComments().subscribe();
+    firstValueFrom(this.getComments());
   }
 
   getComments(): Observable<void> {
@@ -31,7 +31,7 @@ export class CommentService {
   postComment(comment: PostComment): Observable<Comment> {
     return this.dataService
       .create(comment)
-      .pipe(map((response) => response as Comment),tap((comment)=>this.getComments().subscribe()));
+      .pipe(map((response) => response as Comment),tap((comment)=>firstValueFrom(this.getComments())));
   }
 
   private configureComments(commentsArray: Comment[]) {
