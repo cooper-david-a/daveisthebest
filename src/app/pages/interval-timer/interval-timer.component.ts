@@ -19,7 +19,6 @@ import {
 import {
   MatDialog,
   MatDialogModule,
-  MatDialogRef,
 } from '@angular/material/dialog';
 import { MatTable, MatTableModule } from '@angular/material/table';
 
@@ -33,7 +32,6 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { isPlatformBrowser } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { IntervalTimerSaveDialogComponent } from './interval-timer-save-dialog/interval-timer-save-dialog.component';
 

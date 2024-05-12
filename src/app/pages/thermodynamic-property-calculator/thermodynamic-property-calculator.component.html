@@ -1,1 +1,148 @@
-<p>thermodynamic-property-calculator works!</p>
+<div [formGroup]="stateForm">
+  <div>
+    <mat-form-field>
+      <mat-label>Plot type</mat-label>
+      <mat-select [(value)]="plotType" (valueChange)="propertyPlot()">
+        <mat-option value="PH">PH</mat-option>
+        <mat-option value="TS">TS</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Fluid</mat-label>
+      <mat-select formControlName="fluid">
+        <mat-option value="Water">Water</mat-option>
+        <mat-option value="R-134a">R-134a</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-raised-button (click)="addState()">Add State</button>
+  </div>
+
+  <div formArrayName="states">
+    @for(state of stateForm.controls.states.controls; track $index){
+    <table id="state_table" [formGroup]="state">
+      <tbody>
+        <tr>
+          <th colspan="3" style="border-bottom: solid black 2px">
+            <h2>State {{ $index }}</h2>
+            <button mat-icon-button (click)="deleteState($index)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </th>
+        </tr>
+        <tr formGroupName="prop1">
+          <td>
+            <mat-form-field>
+              <mat-label>Property</mat-label>
+              <mat-select formControlName="property">
+                <mat-option value="Q">Quality</mat-option>
+                <mat-option value="T" selected>Temperature</mat-option>
+                <mat-option value="P">Pressure</mat-option>
+                <mat-option value="D">Density</mat-option>
+                <mat-option value="U">spec Energy</mat-option>
+                <mat-option value="H">spec Enthalpy</mat-option>
+                <mat-option value="S">spec Entropy</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field>
+              <mat-label>Value</mat-label>
+              <input matInput type="number" formControlName="value" />
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field>
+              <mat-label>Units</mat-label>
+              <mat-select formControlName="units">
+                <mat-option value="kPa">kPa</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+        </tr>
+        <tr formGroupName="prop2">
+          <td>
+            <mat-form-field>
+              <mat-label>Property</mat-label>
+              <mat-select formControlName="property">
+                <mat-option value="Q">Quality</mat-option>
+                <mat-option value="T" selected>Temperature</mat-option>
+                <mat-option value="P">Pressure</mat-option>
+                <mat-option value="D">Density</mat-option>
+                <mat-option value="U">spec Energy</mat-option>
+                <mat-option value="H">spec Enthalpy</mat-option>
+                <mat-option value="S">spec Entropy</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field>
+              <mat-label>Value</mat-label>
+              <input matInput type="number" formControlName="value" />
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field>
+              <mat-label>Units</mat-label>
+              <mat-select formControlName="units">
+                <mat-option value="kPa">kPa</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+        </tr>
+
+        <tr>
+          <th>Property</th>
+          <th>Value</th>
+          <th>Units</th>
+        </tr>
+
+        <tr>
+          <td>Quality</td>
+          <td id="outQValue"></td>
+          <td><select id="outQUnits"></select></td>
+        </tr>
+        <tr>
+          <td>Temperature</td>
+          <td id="outTValue"></td>
+          <td><select id="outTUnits"></select></td>
+        </tr>
+        <tr>
+          <td>Pressure</td>
+          <td id="outPValue"></td>
+          <td><select id="outPUnits"></select></td>
+        </tr>
+        <tr>
+          <td>Density</td>
+          <td id="outDValue"></td>
+          <td><select id="outDUnits"></select></td>
+        </tr>
+        <tr>
+          <td>spec Energy</td>
+          <td id="outUValue"></td>
+          <td><select id="outUUnits"></select></td>
+        </tr>
+        <tr>
+          <td>spec Enthalpy</td>
+          <td id="outHValue"></td>
+          <td><select id="outHUnits"></select></td>
+        </tr>
+        <tr>
+          <td>spec Entropy</td>
+          <td id="outSValue"></td>
+          <td><select id="outSUnits"></select></td>
+        </tr>
+        <tr>
+          <td>Phase</td>
+          <td colspan="2" id="outPhase"></td>
+        </tr>
+        <tr>
+          <th colspan="3">
+            <button type="button" onclick="calculate()">Calculate</button>
+          </th>
+        </tr>
+      </tbody>
+    </table>
+    }
+  </div>
+</div>

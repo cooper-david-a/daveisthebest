@@ -5,7 +5,7 @@
 
 @use '@fireflysemantics/sass-logger' as logger;
 
-@debug logger.pretty-map(dark.$dark-theme);
+// @debug logger.pretty-map(dark.$dark-theme);
 
 @include mat.core();
 
