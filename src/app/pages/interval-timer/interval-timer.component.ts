@@ -247,6 +247,7 @@ export class IntervalTimerComponent implements OnInit {
         this.totalTime = this.timeRemaining;
         this.roundTimeRemaining = this.elapsedTimeBreakpointArray[0];
         this.timeElapsed = 0;
+        this.savedTimeElapsed = 0;
       }
     }
   }
@@ -279,7 +280,7 @@ export class IntervalTimerComponent implements OnInit {
       );
       if (this.roundIndex > oldRoundIndex) this.audioPlayer.nativeElement.play();
       this.roundTimeRemaining =
-        this.flatRoundsArray[this.roundIndex].duration - this.timeElapsed;
+        this.elapsedTimeBreakpointArray[this.roundIndex] - this.timeElapsed;
       this.progress = (this.timeElapsed / this.totalTime) * 100;
       if (this.roundIndex < 0) {
         this.audioPlayer.nativeElement.play();
