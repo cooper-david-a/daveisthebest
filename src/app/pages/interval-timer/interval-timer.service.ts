@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { Observable, concat, map } from 'rxjs';
+import { Observable, concat, map, switchMap } from 'rxjs';
 
 import { DataService } from '../../services/data.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -41,10 +41,7 @@ export class IntervalTimerService {
 
 
   deleteSchedule(schedule: Schedule) {
-    return concat(
-      this.dataService.delete(schedule.id ?? 0),
-      this.getSchedules()
-    );
+    return this.dataService.delete(schedule.id ?? 0).pipe(switchMap(()=>this.getSchedules()));
   }
 }
 
