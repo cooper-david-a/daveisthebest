@@ -10,20 +10,21 @@
 
     <mat-form-field>
       <mat-label>Fluid</mat-label>
-      <mat-select formControlName="fluid">
+      <input matInput formControlName="fluid" [matAutocomplete]="auto"/>
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
         <mat-option value="Water">Water</mat-option>
         <mat-option value="R-134a">R-134a</mat-option>
-      </mat-select>
+      </mat-autocomplete>
     </mat-form-field>
     <button mat-raised-button (click)="addState()">Add State</button>
   </div>
 
   <div formArrayName="states">
-    @for(state of stateForm.controls.states.controls; track $index){
+    @for(state of stateForm.controls.states.controls; track state){
     <table id="state_table" [formGroup]="state">
       <tbody>
         <tr>
-          <th colspan="3" style="border-bottom: solid black 2px">
+          <th colspan="3">
             <h2>State {{ $index }}</h2>
             <button mat-icon-button (click)="deleteState($index)">
               <mat-icon>delete</mat-icon>

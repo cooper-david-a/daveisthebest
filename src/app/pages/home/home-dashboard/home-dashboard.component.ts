@@ -17,11 +17,11 @@ export class HomeDashboardComponent {
       text: 'This is the best interval timer ever.',
       link: ['interval-timer'],
     },
-    // {
-    //   title: 'Thermodynamic Property Calculator',
-    //   imgUrl: 'assets/images/ThermoPropertyCalculator_card.png',
-    //   text: 'Calculate thermodynamic properties of water and R134a.',
-    //   link: ['thermodynamic-property-calculator']
-    // },
+    {
+      title: 'Thermodynamic Property Calculator',
+      imgUrl: 'assets/images/ThermoPropertyCalculator_card.png',
+      text: 'Calculate thermodynamic properties of water and R134a.',
+      link: ['thermodynamic-property-calculator']
+    },
   ];
 }

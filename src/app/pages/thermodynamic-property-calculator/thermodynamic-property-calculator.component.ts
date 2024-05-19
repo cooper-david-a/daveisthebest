@@ -18,6 +18,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import {MatAutocompleteModule} from '@angular/material/autocomplete'
 
 @Component({
   selector: 'thermodynamic-property-calculator',
@@ -31,6 +32,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatFormFieldModule,
     MatSelectModule,
     MatInputModule,
+    MatAutocompleteModule,
   ],
 })
 export class ThermodynamicPropertyCalculatorComponent implements OnInit {
@@ -39,8 +41,7 @@ export class ThermodynamicPropertyCalculatorComponent implements OnInit {
   dom = inject(DOCUMENT);
   plotType = 'PH';
 
-  constructor() {
-  }
+  constructor() {}
 
   ngOnInit() {
     if (this.isBrowser) {
@@ -53,53 +54,55 @@ export class ThermodynamicPropertyCalculatorComponent implements OnInit {
     }
   }
 
-  dummyState = new FormGroup<StateFormGroup>({
-    prop1: new FormGroup<FluidPropertyFormGroup>({
-      property: new FormControl('P', {
-        validators: [Validators.required],
-        nonNullable: true,
-      }),
-      value: new FormControl(101, {
-        validators: [Validators.required],
-        nonNullable: true,
-      }),
-      units: new FormControl('kPa', {
-        validators: [Validators.required],
-        nonNullable: true,
-      }),
-    }),
-    prop2: new FormGroup<FluidPropertyFormGroup>({
-      property: new FormControl<string>('Q', {
-        validators: [Validators.required],
-        nonNullable: true,
-      }),
-      value: new FormControl<number>(0, {
-        validators: [Validators.required],
-        nonNullable: true,
-      }),
-      units: new FormControl<string>('-', {
-        validators: [Validators.required],
-        nonNullable: true,
-      }),
-    }),
-  });
-
   stateForm = new FormGroup({
     fluid: new FormControl('Water', {
       validators: [Validators.required],
       nonNullable: true,
     }),
-    states: new FormArray<FormGroup<StateFormGroup>>([this.dummyState]),
+    states: new FormArray<FormGroup<StateFormGroup>>([this.stateFactory()]),
   });
 
   addState() {
-    this.stateForm.controls.states.push(this.dummyState);
+    this.stateForm.controls.states.push(this.stateFactory());
+  }
+
+  stateFactory() {
+    return new FormGroup<StateFormGroup>({
+      prop1: new FormGroup<FluidPropertyFormGroup>({
+        property: new FormControl('P', {
+          validators: [Validators.required],
+          nonNullable: true,
+        }),
+        value: new FormControl(101, {
+          validators: [Validators.required],
+          nonNullable: true,
+        }),
+        units: new FormControl('kPa', {
+          validators: [Validators.required],
+          nonNullable: true,
+        }),
+      }),
+      prop2: new FormGroup<FluidPropertyFormGroup>({
+        property: new FormControl<string>('Q', {
+          validators: [Validators.required],
+          nonNullable: true,
+        }),
+        value: new FormControl<number>(0, {
+          validators: [Validators.required],
+          nonNullable: true,
+        }),
+        units: new FormControl<string>('-', {
+          validators: [Validators.required],
+          nonNullable: true,
+        }),
+      }),
+    });
   }
 
   deleteState(index: number) {
-    console.log('index= ',index)
     if (this.stateForm.controls.states.length > 1) {
       this.stateForm.controls.states.removeAt(index);
+      console.log('index= ', index, 'states= ', this.stateForm.value);
     }
   }
 
