@@ -1,0 +1,14 @@
+@use "@angular/material" as mat;
+
+.statesFormContainer {
+  td {
+    max-width: 100px;
+    mat-form-field{
+      max-width: 100%;
+    }
+  }
+}
+
+::ng-deep .statesFormContainer {
+  @include mat.form-field-density(-5);
+}
