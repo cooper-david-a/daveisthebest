@@ -26,7 +26,7 @@ export function app(): express.Express {
   // serve django static files
   server.use(
     '/api-static-files',
-    express.static(resolve(distFolder, '../../../api_files'), {
+    express.static(resolve(distFolder, '../../../../api-static-files'), {
       fallthrough: false,
       index: false,
       maxAge: '1y',
