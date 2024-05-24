@@ -1,5 +1,5 @@
 <div [formGroup]="stateForm">
-  <div>
+  <div class="form-header">
     <mat-form-field>
       <mat-label>Plot type</mat-label>
       <mat-select [(value)]="plotType" (valueChange)="propertyPlot()">
@@ -13,203 +13,261 @@
       <input matInput formControlName="fluid" [matAutocomplete]="auto" />
       <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
         <mat-option value="Water">Water</mat-option>
-        <mat-option value="R-134a">R-134a</mat-option>
+        <mat-option value="R134a">R134a</mat-option>
       </mat-autocomplete>
     </mat-form-field>
-    <button mat-raised-button (click)="addState()">Add State</button>
+    <button mat-raised-button (click)="addState()" color="primary">Add a New State</button>
+    <button mat-raised-button (click)="calculateAll()" color="primary" [disabled]="!ready">Calculate All States</button>
   </div>
 
   <div formArrayName="statesFormArray" class="statesFormContainer">
     @for(state of stateForm.controls.statesFormArray.controls; track state){
-    <table id="state_table" [formGroup]="state">
-      <tbody>
-        <tr>
-          <th colspan="3">
-            <h2>State {{ $index }}</h2>
-            <button mat-icon-button (click)="deleteState($index)">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </th>
-        </tr>
-        <tr formGroupName="prop1">
-          <td>
-            <mat-form-field>
-              <mat-label>Property</mat-label>
-              <mat-select
-                formControlName="property"
-                (selectionChange)="onPropertyChange(state.controls.prop1)"
-              >
-                <mat-option value="Q">Quality</mat-option>
-                <mat-option value="T" selected>Temperature</mat-option>
-                <mat-option value="P">Pressure</mat-option>
-                <mat-option value="D">Density</mat-option>
-                <mat-option value="U">spec Energy</mat-option>
-                <mat-option value="H">spec Enthalpy</mat-option>
-                <mat-option value="S">spec Entropy</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </td>
-          <td>
-            <mat-form-field>
-              <mat-label>Value</mat-label>
-              <input matInput type="number" formControlName="value" />
-            </mat-form-field>
-          </td>
-          <td>
-            <mat-form-field>
-              <mat-label>Units</mat-label>
-              <mat-select formControlName="units">
-                @for(unit of getPropertyUnits(state.controls.prop1); track
-                unit){
+    <mat-card>
+      <table [formGroup]="state">
+        <tbody>
+          <tr>
+            <th colspan="2" >
+              <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                <mat-label>State Label</mat-label>
+                <input matInput type="text" formControlName="label" />
+              </mat-form-field>
+            </th>
+            <th>
+              <button mat-icon-button (click)="deleteState($index)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </th>
+          </tr>
+          <tr formGroupName="prop1">
+            <td>
+              <mat-form-field>
+                <mat-label>Property</mat-label>
+                <mat-select
+                  formControlName="property"
+                  (selectionChange)="onPropertyChange(state.controls.prop1)"
+                >
+                  <mat-option value="Q">Quality</mat-option>
+                  <mat-option value="T" selected>Temperature</mat-option>
+                  <mat-option value="P">Pressure</mat-option>
+                  <mat-option value="D">Density</mat-option>
+                  <mat-option value="U">spec Energy</mat-option>
+                  <mat-option value="H">spec Enthalpy</mat-option>
+                  <mat-option value="S">spec Entropy</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-form-field>
+                <mat-label>Value</mat-label>
+                <input matInput type="number" formControlName="value" />
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-form-field>
+                <mat-label>Units</mat-label>
+                <mat-select formControlName="units">
+                  @for(unit of getPropertyUnits(state.controls.prop1); track
+                  unit){
+                  <mat-option [value]="unit">{{ unit }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </td>
+          </tr>
+          <tr formGroupName="prop2">
+            <td>
+              <mat-form-field>
+                <mat-label>Property</mat-label>
+                <mat-select
+                  formControlName="property"
+                  (selectionChange)="onPropertyChange(state.controls.prop2)"
+                >
+                  <mat-option value="Q">Quality</mat-option>
+                  <mat-option value="T" selected>Temperature</mat-option>
+                  <mat-option value="P">Pressure</mat-option>
+                  <mat-option value="D">Density</mat-option>
+                  <mat-option value="U">spec Energy</mat-option>
+                  <mat-option value="H">spec Enthalpy</mat-option>
+                  <mat-option value="S">spec Entropy</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-form-field>
+                <mat-label>Value</mat-label>
+                <input matInput type="number" formControlName="value" />
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-form-field>
+                <mat-label>Units</mat-label>
+                <mat-select formControlName="units" required>
+                  @for(unit of getPropertyUnits(state.controls.prop2); track
+                  unit){
+                  <mat-option [value]="unit">{{ unit }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </td>
+          </tr>
+
+          <tr>
+            <th>Property</th>
+            <th>Value</th>
+            <th>Units</th>
+          </tr>
+
+          <tr>
+            <td>Quality</td>
+            <td>
+              @if(states[$index]){
+              {{
+                convertFromSI(qOutputUnitsSelect.value, states[$index].Q)
+                  | number
+              }}
+              }
+            </td>
+            <td>
+              <mat-select #qOutputUnitsSelect [value]="units.Q[0]">
+                @for(unit of units.Q; track unit){
                 <mat-option [value]="unit">{{ unit }}</mat-option>
                 }
               </mat-select>
-            </mat-form-field>
-          </td>
-        </tr>
-        <tr formGroupName="prop2">
-          <td>
-            <mat-form-field>
-              <mat-label>Property</mat-label>
-              <mat-select
-                formControlName="property"
-                (selectionChange)="onPropertyChange(state.controls.prop2)"
-              >
-                <mat-option value="Q">Quality</mat-option>
-                <mat-option value="T" selected>Temperature</mat-option>
-                <mat-option value="P">Pressure</mat-option>
-                <mat-option value="D">Density</mat-option>
-                <mat-option value="U">spec Energy</mat-option>
-                <mat-option value="H">spec Enthalpy</mat-option>
-                <mat-option value="S">spec Entropy</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </td>
-          <td>
-            <mat-form-field>
-              <mat-label>Value</mat-label>
-              <input matInput type="number" formControlName="value" />
-            </mat-form-field>
-          </td>
-          <td>
-            <mat-form-field>
-              <mat-label>Units</mat-label>
-              <mat-select formControlName="units" required>
-                @for(unit of getPropertyUnits(state.controls.prop2); track
-                unit){
+            </td>
+          </tr>
+          <tr>
+            <td>Temperature</td>
+            <td>
+              @if(states[$index]){
+              {{
+                convertFromSI(tOutputUnitsSelect.value, states[$index].T)
+                  | number
+              }}
+              }
+            </td>
+            <td>
+              <mat-select #tOutputUnitsSelect [value]="units.T[0]">
+                @for(unit of units.T; track unit){
                 <mat-option [value]="unit">{{ unit }}</mat-option>
                 }
               </mat-select>
-            </mat-form-field>
-          </td>
-        </tr>
+            </td>
+          </tr>
 
-        <tr>
-          <th>Property</th>
-          <th>Value</th>
-          <th>Units</th>
-        </tr>
-
-        <tr>
-          <td>Quality</td>
-          <td>@if(states[$index]){ {{ states[$index].Q }} }</td>
-          <td>
-            <mat-chip-listbox>
-              @for(unit of units.Q; track unit){
-              <mat-chip-option [value]="unit" [selected]="unit==units.Q[0]">{{ unit }}</mat-chip-option>
+          <tr>
+            <td>Pressure</td>
+            <td>
+              @if(states[$index]){
+              {{
+                convertFromSI(pOutputUnitsSelect.value, states[$index].P)
+                  | number
+              }}
               }
-            </mat-chip-listbox>
-          </td>
-        </tr>
-        <tr>
-          <td>Temperature</td>
-          <td>@if(states[$index]){ {{ states[$index].T }} }</td>
-          <td>
-            <mat-chip-listbox>
-              @for(unit of units.T; track unit){
-              <mat-chip-option [value]="unit" [selected]="unit==units.T[0]">{{ unit }}</mat-chip-option>
-              }
-            </mat-chip-listbox>
-          </td>
-        </tr>
+            </td>
+            <td>
+              <mat-select #pOutputUnitsSelect [value]="units.P[0]">
+                @for(unit of units.P; track unit){
+                <mat-option [value]="unit">{{ unit }}</mat-option>
+                }
+              </mat-select>
+            </td>
+          </tr>
 
-        <tr>
-          <td>Pressure</td>
-          <td>@if(states[$index]){ {{ states[$index].P }} }</td>
-          <td>
-            <mat-chip-listbox>
-              @for(unit of units.P; track unit){
-              <mat-chip-option [value]="unit" [selected]="unit==units.P[0]">{{ unit }}</mat-chip-option>
+          <tr>
+            <td>Density</td>
+            <td>
+              @if(states[$index]){
+              {{
+                convertFromSI(dOutputUnitsSelect.value, states[$index].D)
+                  | number
+              }}
               }
-            </mat-chip-listbox>
-          </td>
-        </tr>
+            </td>
+            <td>
+              <mat-select #dOutputUnitsSelect [value]="units.D[0]">
+                @for(unit of units.D; track unit){
+                <mat-option [value]="unit">{{ unit }}</mat-option>
+                }
+              </mat-select>
+            </td>
+          </tr>
 
-        <tr>
-          <td>Density</td>
-          <td>@if(states[$index]){ {{ states[$index].D }} }</td>
-          <td>
-            <mat-chip-listbox>
-              @for(unit of units.D; track unit){
-              <mat-chip-option [value]="unit" [selected]="unit==units.D[0]">{{ unit }}</mat-chip-option>
+          <tr>
+            <td>spec Energy</td>
+            <td>
+              @if(states[$index]){
+              {{
+                convertFromSI(uOutputUnitsSelect.value, states[$index].U)
+                  | number
+              }}
               }
-            </mat-chip-listbox>
-          </td>
-        </tr>
+            </td>
+            <td>
+              <mat-select #uOutputUnitsSelect [value]="units.U[0]">
+                @for(unit of units.U; track unit){
+                <mat-option [value]="unit">{{ unit }}</mat-option>
+                }
+              </mat-select>
+            </td>
+          </tr>
 
-        <tr>
-          <td>spec Energy</td>
-          <td>@if(states[$index]){ {{ states[$index].U }} }</td>
-          <td>
-            <mat-chip-listbox>
-              @for(unit of units.U; track unit){
-              <mat-chip-option [value]="unit" [selected]="unit==units.U[0]">{{ unit }}</mat-chip-option>
+          <tr>
+            <td>spec Enthalpy</td>
+            <td>
+              @if(states[$index]){
+              {{
+                convertFromSI(hOutputUnitsSelect.value, states[$index].H)
+                  | number
+              }}
               }
-            </mat-chip-listbox>
-          </td>
-        </tr>
+            </td>
+            <td>
+              <mat-select #hOutputUnitsSelect [value]="units.H[0]">
+                @for(unit of units.H; track unit){
+                <mat-option [value]="unit">{{ unit }}</mat-option>
+                }
+              </mat-select>
+            </td>
+          </tr>
 
-        <tr>
-          <td>spec Enthalpy</td>
-          <td>@if(states[$index]){ {{ states[$index].H }} }</td>
-          <td>
-            <mat-chip-listbox>
-              @for(unit of units.H; track unit){
-              <mat-chip-option [value]="unit" [selected]="unit==units.H[0]">{{ unit }}</mat-chip-option>
+          <tr>
+            <td>spec Entropy</td>
+            <td>
+              @if(states[$index]){
+              {{
+                convertFromSI(sOutputUnitsSelect.value, states[$index].S)
+                  | number
+              }}
               }
-            </mat-chip-listbox>
-          </td>
-        </tr>
+            </td>
+            <td>
+              <mat-select #sOutputUnitsSelect [value]="units.S[0]">
+                @for(unit of units.S; track unit){
+                <mat-option [value]="unit">{{ unit }}</mat-option>
+                }
+              </mat-select>
+            </td>
+          </tr>
 
-        <tr>
-          <td>spec Entropy</td>
-          <td>@if(states[$index]){ {{ states[$index].S }} }</td>
-          <td>
-            <mat-chip-listbox>
-              @for(unit of units.S; track unit){
-              <mat-chip-option [value]="unit" [selected]="unit==units.S[0]">{{ unit }}</mat-chip-option>
-              }
-            </mat-chip-listbox>
-          </td>
-        </tr>
-
-        <tr>
-          <td>Phase</td>
-          <td colspan="2"></td>
-        </tr>
-        <tr>
-          <th colspan="3">
-            <button
-              mat-raised-button
-              (click)="calculate(state, $index)"
-              [disabled]="!ready"
-            >
-              Calculate
-            </button>
-          </th>
-        </tr>
-      </tbody>
-    </table>
+          <tr>
+            <td>Phase</td>
+            <td colspan="2"></td>
+          </tr>
+          <tr>
+            <th colspan="3">
+              <button
+                mat-raised-button
+                (click)="calculate(state, $index)"
+                [disabled]="!ready"
+                color="primary"
+              >
+                Calculate
+              </button>
+            </th>
+          </tr>
+        </tbody>
+      </table>
+    </mat-card>
     }
   </div>
 </div>

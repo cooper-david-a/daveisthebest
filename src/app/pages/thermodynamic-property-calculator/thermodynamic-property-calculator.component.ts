@@ -1,4 +1,4 @@
-import { isPlatformBrowser, DOCUMENT } from '@angular/common';
+import { isPlatformBrowser, DOCUMENT, DecimalPipe } from '@angular/common';
 import {
   Component,
   OnInit,
@@ -19,7 +19,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatChipsModule } from '@angular/material/chips';
+import { MatCardModule } from '@angular/material/card';
 
 declare const Module: {
   PropsSI: (
@@ -45,7 +45,8 @@ declare const Module: {
     MatSelectModule,
     MatInputModule,
     MatAutocompleteModule,
-    MatChipsModule,
+    MatCardModule,
+    DecimalPipe,
   ],
 })
 export class ThermodynamicPropertyCalculatorComponent implements OnInit {
@@ -106,6 +107,7 @@ export class ThermodynamicPropertyCalculatorComponent implements OnInit {
 
   stateFormFactory() {
     return new FormGroup<StateFormGroup>({
+      label: new FormControl('',{nonNullable:true}),
       prop1: new FormGroup<FluidPropertyFormGroup>({
         property: new FormControl('P', {
           validators: [Validators.required],
@@ -217,6 +219,10 @@ export class ThermodynamicPropertyCalculatorComponent implements OnInit {
     this.states[index] = state;
   }
 
+  calculateAll(){
+    this.stateForm.controls.statesFormArray.controls.forEach((stateFormGroup,index)=>this.calculate(stateFormGroup,index))
+  }
+
   propertyPlot() {}
 
   units: Units = {
@@ -305,6 +311,7 @@ export class ThermodynamicPropertyCalculatorComponent implements OnInit {
 }
 
 interface StateFormGroup {
+  label: FormControl<string>
   prop1: FormGroup<FluidPropertyFormGroup>;
   prop2: FormGroup<FluidPropertyFormGroup>;
 }
