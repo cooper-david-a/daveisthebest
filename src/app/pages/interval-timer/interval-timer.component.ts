@@ -16,10 +16,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 
-import {
-  MatDialog,
-  MatDialogModule,
-} from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTable, MatTableModule } from '@angular/material/table';
 
 import { IntervalTimerOpenDialogComponent } from './interval-timer-open-dialog/interval-timer-open-dialog.component';
@@ -34,6 +31,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { IntervalTimerSaveDialogComponent } from './interval-timer-save-dialog/interval-timer-save-dialog.component';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'interval-timer',
@@ -98,14 +96,14 @@ export class IntervalTimerComponent implements OnInit {
   @ViewChild(MatTable) table!: MatTable<Row>;
 
   @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
+  openScheduleDialog = inject(MatDialog);
+  saveScheduleDialog = inject(MatDialog);
+  authService = inject(AuthService);
+  service = inject(IntervalTimerService);
+  isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  wakeLockPromise!: Promise<WakeLockSentinel>;
 
-  constructor(
-    public openScheduleDialog: MatDialog,
-    public saveScheduleDialog: MatDialog,
-    public authService: AuthService,
-    private service: IntervalTimerService
-  ) {
-  }
+  constructor() {}
 
   ngOnInit(): void {
     this.generateTimer();
@@ -166,10 +164,10 @@ export class IntervalTimerComponent implements OnInit {
 
       dialogRef
         .afterClosed()
-        .subscribe((result?: {oldSchedule:Schedule, isNew: boolean }) => {
+        .subscribe((result?: { oldSchedule: Schedule; isNew: boolean }) => {
           if (result && result.isNew) {
             this.service.createSchedule(fields).subscribe();
-          } else if(result) {
+          } else if (result) {
             const id = result.oldSchedule.id ?? 0;
             this.service.updateSchedule(id, fields).subscribe();
           }
@@ -262,6 +260,9 @@ export class IntervalTimerComponent implements OnInit {
     this.audioPlayer.nativeElement.play();
     this.startTime = new Date().getTime();
     this.timer = setInterval(() => this.update(), 100);
+    if (this.isBrowser && 'wakeLock' in navigator) {
+      this.wakeLockPromise = navigator.wakeLock.request();
+    }
   }
 
   pause() {
@@ -278,7 +279,8 @@ export class IntervalTimerComponent implements OnInit {
       this.roundIndex = this.elapsedTimeBreakpointArray.findIndex(
         (t) => t > this.timeElapsed
       );
-      if (this.roundIndex > oldRoundIndex) this.audioPlayer.nativeElement.play();
+      if (this.roundIndex > oldRoundIndex)
+        this.audioPlayer.nativeElement.play();
       this.roundTimeRemaining =
         this.elapsedTimeBreakpointArray[this.roundIndex] - this.timeElapsed;
       this.progress = (this.timeElapsed / this.totalTime) * 100;
@@ -294,6 +296,7 @@ export class IntervalTimerComponent implements OnInit {
     this.running = false;
     this.roundIndex = 0;
     this.generateTimer();
+    if (this.wakeLockPromise) this.wakeLockPromise.then((wakeLockSentinel)=>wakeLockSentinel.release())
   }
 }
 

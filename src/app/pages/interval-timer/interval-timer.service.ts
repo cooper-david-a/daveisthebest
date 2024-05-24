@@ -38,8 +38,6 @@ export class IntervalTimerService {
     return new Observable<Object>();
   }
 
-
-
   deleteSchedule(schedule: Schedule) {
     return concat(
       this.dataService.delete(schedule.id ?? 0),
