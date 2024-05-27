@@ -20,6 +20,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatCardModule } from '@angular/material/card';
+import { MatTabsModule } from '@angular/material/tabs';
+import { ContourPlotComponent } from './contour-plot/contour-plot.component';
+import { range } from 'd3';
 
 declare const Module: {
   PropsSI: (
@@ -46,7 +49,9 @@ declare const Module: {
     MatInputModule,
     MatAutocompleteModule,
     MatCardModule,
+    MatTabsModule,
     DecimalPipe,
+    ContourPlotComponent,
   ],
 })
 export class ThermodynamicPropertyCalculatorComponent implements OnInit {
@@ -86,6 +91,12 @@ export class ThermodynamicPropertyCalculatorComponent implements OnInit {
     }
   }
 
+  PHData = {
+    x: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    y: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    z: range(100),
+  };
+
   stateForm = new FormGroup({
     fluid: new FormControl('Water', {
       validators: [Validators.required],
@@ -107,7 +118,7 @@ export class ThermodynamicPropertyCalculatorComponent implements OnInit {
 
   stateFormFactory() {
     return new FormGroup<StateFormGroup>({
-      label: new FormControl('',{nonNullable:true}),
+      label: new FormControl('', { nonNullable: true }),
       prop1: new FormGroup<FluidPropertyFormGroup>({
         property: new FormControl('P', {
           validators: [Validators.required],
@@ -219,8 +230,10 @@ export class ThermodynamicPropertyCalculatorComponent implements OnInit {
     this.states[index] = state;
   }
 
-  calculateAll(){
-    this.stateForm.controls.statesFormArray.controls.forEach((stateFormGroup,index)=>this.calculate(stateFormGroup,index))
+  calculateAll() {
+    this.stateForm.controls.statesFormArray.controls.forEach(
+      (stateFormGroup, index) => this.calculate(stateFormGroup, index)
+    );
   }
 
   propertyPlot() {}
@@ -311,7 +324,7 @@ export class ThermodynamicPropertyCalculatorComponent implements OnInit {
 }
 
 interface StateFormGroup {
-  label: FormControl<string>
+  label: FormControl<string>;
   prop1: FormGroup<FluidPropertyFormGroup>;
   prop2: FormGroup<FluidPropertyFormGroup>;
 }

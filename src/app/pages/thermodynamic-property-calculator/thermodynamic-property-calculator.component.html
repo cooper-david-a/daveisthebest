@@ -19,6 +19,8 @@
     <button mat-raised-button (click)="addState()" color="primary">Add a New State</button>
     <button mat-raised-button (click)="calculateAll()" color="primary" [disabled]="!ready">Calculate All States</button>
   </div>
+<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+  <mat-tab label="States">
 
   <div formArrayName="statesFormArray" class="statesFormContainer">
     @for(state of stateForm.controls.statesFormArray.controls; track state){
@@ -270,4 +272,10 @@
     </mat-card>
     }
   </div>
+  </mat-tab>
+  <mat-tab label="PH Diagram">
+    <contour-plot [contourData]="PHData"></contour-plot>
+  </mat-tab>
+
+</mat-tab-group>
 </div>
