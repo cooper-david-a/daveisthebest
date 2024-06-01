@@ -33,6 +33,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { IntervalTimerSaveDialogComponent } from './interval-timer-save-dialog/interval-timer-save-dialog.component';
 import { isPlatformBrowser } from '@angular/common';
 
+import {Howl} from 'howler';
+
 @Component({
   selector: 'interval-timer',
   templateUrl: './interval-timer.component.html',
@@ -95,7 +97,8 @@ export class IntervalTimerComponent implements OnInit {
   expandedRowIndex!: number | null;
   @ViewChild(MatTable) table!: MatTable<Row>;
 
-  @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
+  bell = new Howl({src:["/assets/Bell.wav"]});
+
   openScheduleDialog = inject(MatDialog);
   saveScheduleDialog = inject(MatDialog);
   authService = inject(AuthService);
@@ -257,7 +260,7 @@ export class IntervalTimerComponent implements OnInit {
   }
 
   play() {
-    this.audioPlayer.nativeElement.play();
+    this.bell.play();
     this.startTime = new Date().getTime();
     this.timer = setInterval(() => this.update(), 100);
     if (this.isBrowser && 'wakeLock' in navigator) {
@@ -280,12 +283,12 @@ export class IntervalTimerComponent implements OnInit {
         (t) => t > this.timeElapsed
       );
       if (this.roundIndex > oldRoundIndex)
-        this.audioPlayer.nativeElement.play();
+        this.bell.play();
       this.roundTimeRemaining =
         this.elapsedTimeBreakpointArray[this.roundIndex] - this.timeElapsed;
       this.progress = (this.timeElapsed / this.totalTime) * 100;
       if (this.roundIndex < 0) {
-        this.audioPlayer.nativeElement.play();
+        this.bell.play();
         this.stop();
       }
     }
