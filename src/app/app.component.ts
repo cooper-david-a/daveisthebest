@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, PLATFORM_ID, inject } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 
 import { AuthService } from './services/auth.service';
@@ -10,6 +10,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { CommentsComponent } from './comments/comments/comments.component';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -25,10 +26,11 @@ import { CommentsComponent } from './comments/comments/comments.component';
     MatMenuModule,
     RouterLink,
     RouterOutlet,
-    CommentsComponent
+    CommentsComponent,
   ],
 })
 export class AppComponent {
   title = 'DaveIsTheBest';
-  constructor(public authService: AuthService) {}
+  isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  authService = inject(AuthService);
 }

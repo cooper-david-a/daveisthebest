@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { Observable, concat, map, switchMap } from 'rxjs';
+import { Observable, map, switchMap, take } from 'rxjs';
 
 import { DataService } from '../../services/data.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -24,7 +24,7 @@ export class IntervalTimerService {
       map((response) => response as Schedule[]),
       map((schedules) => {
         this.schedules = schedules;
-      })
+      }),take(1)
     );
   }
 
@@ -37,8 +37,6 @@ export class IntervalTimerService {
     if (this.authService.isLoggedIn) return this.dataService.update(id,schedule);
     return new Observable<Object>();
   }
-
-
 
   deleteSchedule(schedule: Schedule) {
     return this.dataService.delete(schedule.id ?? 0).pipe(switchMap(()=>this.getSchedules()));
