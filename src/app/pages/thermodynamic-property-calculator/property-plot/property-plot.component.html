@@ -1,0 +1,15 @@
+<div class="container">
+  <svg [attr.viewBox]="viewBox()">
+    <g [attr.transform]="transform()">
+      @for(field of fields; track field){ @for(contourArray of
+      contours()[field]; track contourArray){ @for(coordinatesArray of
+      contourArray.coordinates; track coordinatesArray){ @for(path of
+      coordinatesArray; track path){
+      <path
+        [attr.d]="generatePath(path)"
+        [class] = "field"
+      />
+      } } } }
+    </g>
+  </svg>
+</div>

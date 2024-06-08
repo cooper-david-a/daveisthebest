@@ -1,6 +1,12 @@
-import { isPlatformBrowser, DOCUMENT, DecimalPipe } from '@angular/common';
+import {
+  isPlatformBrowser,
+  DOCUMENT,
+  DecimalPipe,
+  AsyncPipe,
+} from '@angular/common';
 import {
   Component,
+  OnDestroy,
   OnInit,
   PLATFORM_ID,
   Renderer2,
@@ -21,8 +27,12 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
-import { ContourPlotComponent } from './contour-plot/contour-plot.component';
-import { range } from 'd3';
+import {
+  PlotMetaData,
+  PropertyPlotComponent,
+} from './property-plot/property-plot.component';
+import { HttpClient } from '@angular/common/http';
+import { Subscription, map } from 'rxjs';
 
 declare const Module: {
   PropsSI: (
@@ -51,15 +61,19 @@ declare const Module: {
     MatCardModule,
     MatTabsModule,
     DecimalPipe,
-    ContourPlotComponent,
+    AsyncPipe,
+    PropertyPlotComponent,
   ],
 })
-export class ThermodynamicPropertyCalculatorComponent implements OnInit {
+export class ThermodynamicPropertyCalculatorComponent implements OnInit, OnDestroy {
+  dom = inject(DOCUMENT);
   isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   renderer = inject(Renderer2);
-  dom = inject(DOCUMENT);
-  plotType = 'PH';
+  http = inject(HttpClient);
   states: State[] = [];
+  TSData!: PlotMetaData;
+  PHData!: PlotMetaData;
+  phDataSubscription!:Subscription;
 
   get moduleIsLoaded() {
     if (Module == undefined) {
@@ -73,6 +87,8 @@ export class ThermodynamicPropertyCalculatorComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
+    this.phDataSubscription = this.getPlotData('PH_Water').subscribe((data) => {console.log(data);this.PHData = data});
+
     if (this.isBrowser) {
       let coolpropScript = this.renderer.createElement('script');
       coolpropScript.src = 'assets/scripts/coolprop/coolprop.js';
@@ -91,11 +107,9 @@ export class ThermodynamicPropertyCalculatorComponent implements OnInit {
     }
   }
 
-  PHData = {
-    x: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-    y: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-    z: range(100),
-  };
+  ngOnDestroy(): void {
+    this.phDataSubscription.unsubscribe();
+  }
 
   stateForm = new FormGroup({
     fluid: new FormControl('Water', {
@@ -236,8 +250,6 @@ export class ThermodynamicPropertyCalculatorComponent implements OnInit {
     );
   }
 
-  propertyPlot() {}
-
   units: Units = {
     Q: ['-', '%'],
     T: ['K', '°C'],
@@ -321,6 +333,11 @@ export class ThermodynamicPropertyCalculatorComponent implements OnInit {
         return NaN;
     }
   }
+
+  getPlotData(type: string) {
+    const baseUrl = '/assets/data/';
+    return this.http.get<PlotMetaData>(`${baseUrl}${type}.json`);
+  }
 }
 
 interface StateFormGroup {
@@ -338,7 +355,6 @@ interface State {
   H: number;
   S: number;
 }
-
 interface FluidPropertyFormGroup {
   property: FormControl<string>;
   value: FormControl<number>;

@@ -1,0 +1,17 @@
+.container {
+  margin: auto;
+  max-width: 600px;
+  svg {
+    g {
+      path {
+        fill: none;
+        stroke: #fff;
+        stroke-opacity: 0.6;
+        stroke-width: 0.1;
+      }
+      .Q {
+        stroke-dasharray: 3, 3;
+      }
+    }
+  }
+}
