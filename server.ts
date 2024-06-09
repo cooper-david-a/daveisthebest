@@ -6,6 +6,7 @@ import * as express from 'express';
 import { existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import bootstrap from './src/main.server';
+import * as cors from 'cors';
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
@@ -22,6 +23,8 @@ export function app(): express.Express {
 
   // Example Express Rest API endpoints
   // server.get('/api/**', (req, res) => { });
+  
+  server.use(cors({origin:['https://archive.daveisthebest.com']})) //only needed to serve wasm file for archive.daveisthebest.com/thermo-property-calculator
 
   // serve django static files
   server.use(

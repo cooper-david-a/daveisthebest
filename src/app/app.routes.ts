@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { archiveRedirectGuard } from './guards/archive-redirect.guard';
 
 export const routes: Routes = [
   {
@@ -9,16 +10,16 @@ export const routes: Routes = [
   {
     path: 'activate-account/:uid/:token',
     loadComponent: () =>
-      import('src/app/pages/login/activate-account/activate-account.component').then(
-        (m) => m.ActivateAccountComponent
-      ),
+      import(
+        'src/app/pages/login/activate-account/activate-account.component'
+      ).then((m) => m.ActivateAccountComponent),
   },
   {
     path: 'password-reset/:uid/:token',
     loadComponent: () =>
-      import('src/app/pages/login/password-reset/password-reset.component').then(
-        (m) => m.PasswordResetComponent
-      ),
+      import(
+        'src/app/pages/login/password-reset/password-reset.component'
+      ).then((m) => m.PasswordResetComponent),
   },
   {
     path: 'interval-timer',
@@ -33,6 +34,12 @@ export const routes: Routes = [
       import(
         './pages/thermodynamic-property-calculator/thermodynamic-property-calculator.component'
       ).then((m) => m.ThermodynamicPropertyCalculatorComponent),
+  },
+  {
+    path: 'archive',
+    canActivate: [archiveRedirectGuard],
+    loadComponent: () =>
+      import('./pages/home/home.component').then((m) => m.HomeComponent),
   },
   {
     path: '',
