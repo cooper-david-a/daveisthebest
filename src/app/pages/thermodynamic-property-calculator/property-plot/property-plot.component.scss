@@ -1,17 +1,70 @@
 .container {
   margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   max-width: 600px;
-  svg {
-    g {
-      path {
-        fill: none;
-        stroke: #fff;
-        stroke-opacity: 0.6;
-        stroke-width: 0.1;
-      }
-      .Q {
-        stroke-dasharray: 3, 3;
+
+  .plot-window {
+    path {
+      fill: none;
+      stroke: #fff;
+      stroke-opacity: 0.6;
+      stroke-width: 0.1;
+    }
+    .border {
+      fill: none;
+      stroke: #fff;
+      stroke-opacity: 1;
+      stroke-width: .6;
+    }
+  }
+
+  .legend-box {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 600px;
+    align-items: center;
+    justify-content: center;
+    row-gap: 1em;
+    .legend-entry {
+      ::ng-deep .mdc-label {
+        display: flex;
+        align-items: center;
+        svg {
+          width: 100px;
+          path {
+            fill: none;
+            stroke: #fff;
+            stroke-opacity: 0.6;
+            stroke-width: 0.1;
+          }
+        }
       }
     }
   }
 }
+
+.Q {
+  stroke-dasharray: 5, 3;
+}
+
+.T {
+  stroke-dasharray: 1, 1;
+}
+.D {
+  stroke-dasharray: 3, 2, 1, 2;
+}
+.U {
+  stroke-dasharray: 3, 1, 1, 1, 1, 1;
+}
+// .S {
+// }
+.V {
+  stroke-dasharray: 3, 1;
+}
+.P {
+  stroke-dasharray: 1, 1;
+}
+// .H {
+// }

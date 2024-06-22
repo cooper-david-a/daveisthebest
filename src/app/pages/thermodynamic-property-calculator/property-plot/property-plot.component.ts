@@ -1,16 +1,19 @@
+import { KeyValuePipe } from '@angular/common';
 import { Component, OnInit, computed, input } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Contours } from 'd3';
 import * as d3 from 'd3';
+import { AxisComponent } from './axis/axis.component';
 
 @Component({
   selector: 'property-plot',
   standalone: true,
-  imports: [],
+  imports: [MatCheckboxModule, KeyValuePipe, FormsModule, AxisComponent],
   templateUrl: './property-plot.component.html',
   styleUrl: './property-plot.component.scss',
 })
 export class PropertyPlotComponent implements OnInit {
-  renderedPath = '';
   dummyData = {
     xVariable: 'P',
     yVariable: 'H',
@@ -24,25 +27,53 @@ export class PropertyPlotComponent implements OnInit {
     H: { data: [[]], thresholds: [] },
     S: { data: [[]], thresholds: [] },
   };
-
   data = input<PlotMetaData | null>(this.dummyData);
 
   width = computed(() => this.data()?.width ?? 0);
   height = computed(() => this.data()?.height ?? 0);
   viewBox = computed(() => `0,0,${this.width()},${this.height()}`);
   transform = computed(() => `scale(1,-1) translate(0,${-this.height()})`);
+  xDomain = computed(() => {
+    let xVariable = this.data()?.xVariable ?? 'H';
+    let data = this.data() ?? this.dummyData;
+    return [
+      Math.min(...data[xVariable as keyof PlotData].data.flat()),
+      Math.max(...data[xVariable as keyof PlotData].data.flat()),
+    ];
+  });
+  yDomain = computed(() => {
+    let yVariable = this.data()?.yVariable ?? 'P';
+    let data = this.data() ?? this.dummyData;
+    return [
+      Math.min(...data[yVariable as keyof PlotData].data.flat()),
+      Math.max(...data[yVariable as keyof PlotData].data.flat()),
+    ];
+  });
 
-  fields = ['Q', 'T', 'P', 'D', 'U', 'H', 'S', 'V'];
+  fields = {
+    Q: { visible: true },
+    T: { visible: false },
+    P: { visible: false },
+    D: { visible: false },
+    U: { visible: false },
+    H: { visible: false },
+    S: { visible: false },
+    V: { visible: false },
+  };
 
   contours = computed(() => {
     let data = this.data() ?? this.dummyData;
     let generator!: Contours;
     let conts: { [field: string]: d3.ContourMultiPolygon[] } = {};
 
-    for (let field of this.fields) {
+    for (let field of Object.keys(this.fields)) {
       if (![data.xVariable, data.yVariable].includes(field)) {
         generator = d3.contours().size([this.width(), this.height()]);
-        // .thresholds(data[key as keyof PlotData].thresholds);
+
+        if (data[field as keyof PlotData].thresholds.length > 0) {
+          generator.thresholds(data[field as keyof PlotData].thresholds);
+        }
+
         if (data[field as keyof PlotData]) {
           conts[field] = generator(data[field as keyof PlotData].data.flat());
         }
@@ -63,6 +94,11 @@ export class PropertyPlotComponent implements OnInit {
       return pathSerializer.toString();
     }
     return '';
+  }
+
+  toggleVisibility(field: string) {
+    this.fields[field as keyof typeof this.fields].visible =
+      !this.fields[field as keyof typeof this.fields].visible;
   }
 }
 

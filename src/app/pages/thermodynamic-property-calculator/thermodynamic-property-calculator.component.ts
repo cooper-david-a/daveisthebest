@@ -32,7 +32,7 @@ import {
   PropertyPlotComponent,
 } from './property-plot/property-plot.component';
 import { HttpClient } from '@angular/common/http';
-import { Subscription, map } from 'rxjs';
+import { Subscription, map, take } from 'rxjs';
 
 declare const Module: {
   PropsSI: (
@@ -65,7 +65,7 @@ declare const Module: {
     PropertyPlotComponent,
   ],
 })
-export class ThermodynamicPropertyCalculatorComponent implements OnInit, OnDestroy {
+export class ThermodynamicPropertyCalculatorComponent implements OnInit {
   dom = inject(DOCUMENT);
   isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   renderer = inject(Renderer2);
@@ -74,6 +74,7 @@ export class ThermodynamicPropertyCalculatorComponent implements OnInit, OnDestr
   TSData!: PlotMetaData;
   PHData!: PlotMetaData;
   phDataSubscription!:Subscription;
+  tsDataSubscription!:Subscription;
 
   get moduleIsLoaded() {
     if (Module == undefined) {
@@ -87,7 +88,8 @@ export class ThermodynamicPropertyCalculatorComponent implements OnInit, OnDestr
   constructor() {}
 
   ngOnInit() {
-    this.phDataSubscription = this.getPlotData('PH_Water').subscribe((data) => {console.log(data);this.PHData = data});
+    this.phDataSubscription = this.getPlotData('PH_Water').subscribe((data) => {this.PHData = data});
+    this.tsDataSubscription = this.getPlotData('TS_Water').subscribe((data) => {this.TSData = data});
 
     if (this.isBrowser) {
       let coolpropScript = this.renderer.createElement('script');
@@ -105,10 +107,6 @@ export class ThermodynamicPropertyCalculatorComponent implements OnInit, OnDestr
         }
       };
     }
-  }
-
-  ngOnDestroy(): void {
-    this.phDataSubscription.unsubscribe();
   }
 
   stateForm = new FormGroup({
@@ -336,7 +334,7 @@ export class ThermodynamicPropertyCalculatorComponent implements OnInit, OnDestr
 
   getPlotData(type: string) {
     const baseUrl = '/assets/data/';
-    return this.http.get<PlotMetaData>(`${baseUrl}${type}.json`);
+    return this.http.get<PlotMetaData>(`${baseUrl}${type}.json`).pipe(take(1));
   }
 }
 

@@ -1,15 +1,35 @@
 <div class="container">
-  <svg [attr.viewBox]="viewBox()">
-    <g [attr.transform]="transform()">
-      @for(field of fields; track field){ @for(contourArray of
-      contours()[field]; track contourArray){ @for(coordinatesArray of
-      contourArray.coordinates; track coordinatesArray){ @for(path of
-      coordinatesArray; track path){
-      <path
-        [attr.d]="generatePath(path)"
-        [class] = "field"
-      />
-      } } } }
+  <div class="legend-box">
+    @for(field of fields | keyvalue; track field){
+    @if(![data()?.xVariable,data()?.yVariable].includes(field.key)){
+    <mat-checkbox [(ngModel)]="field.value.visible" class="legend-entry">
+      {{ field.key }}
+      <svg
+        viewBox="0,0,17,5"
+        xmlns="http://www.w3.org/2000/svg"
+        class="legend-dash"
+      >
+        <path d="M.5,3L16.5,3" [class]="field.key" />
+      </svg>
+    </mat-checkbox>
+    } }
+  </div>
+
+  <svg
+    [attr.viewBox]="viewBox()"
+    class="plot-window"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    @for(field of fields | keyvalue; track field){ @if(field.value.visible){
+    <g class="contours" [attr.transform]="transform()">
+      @for(contourArray of contours()[field.key]; track contourArray){
+      @for(coordinatesArray of contourArray.coordinates; track
+      coordinatesArray){ @for(path of coordinatesArray; track path){
+      <path [attr.d]="generatePath(path)" [class]="field.key" />
+      } } }
     </g>
+    } }
+    <rect [attr.width]="width()" [attr.height]="height()" class="border"></rect>
+    <!-- <g axis [axisLength]="width()" [min]="xDomain()[0]" [max]="xDomain()[1]" spacing="log"> </g>-->
   </svg>
 </div>
