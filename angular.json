@@ -15,14 +15,20 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/DaveIsTheBest/browser",
+            "outputPath": {
+              "base": "dist/DaveIsTheBest"
+            },
             "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": ["zone.js"],
+            "polyfills": [
+              "zone.js"
+            ],
             "tsConfig": "tsconfig.app.json",
-            "assets": ["src/favicon.ico", "src/assets"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
             "styles": [
               {
                 "input": "src/themes/light-theme.scss",
@@ -36,7 +42,18 @@
               },
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "browser": "src/main.ts",
+            "server": "src/main.server.ts",
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "."
+              ]
+            },
+            "prerender": true,
+            "ssr": {
+              "entry": "server.ts"
+            }
           },
           "configurations": {
             "production": {
@@ -55,9 +72,7 @@
               "outputHashing": "all"
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true,
@@ -116,66 +131,6 @@
             ],
             "scripts": []
           }
-        },
-        "server": {
-          "builder": "@angular-devkit/build-angular:server",
-          "options": {
-            "outputPath": "dist/DaveIsTheBest/server",
-            "main": "server.ts",
-            "tsConfig": "tsconfig.server.json"
-          },
-          "configurations": {
-            "production": {
-              "outputHashing": "media"
-            },
-            "development": {
-              "buildOptimizer": false,
-              "optimization": false,
-              "sourceMap": true,
-              "extractLicenses": false,
-              "vendorChunk": true,
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.development.ts"
-                }
-              ]
-            }
-          },
-          "defaultConfiguration": "production"
-        },
-        "serve-ssr": {
-          "builder": "@angular-devkit/build-angular:ssr-dev-server",
-          "configurations": {
-            "development": {
-              "browserTarget": "DaveIsTheBest:build:development",
-              "serverTarget": "DaveIsTheBest:server:development"
-            },
-            "production": {
-              "browserTarget": "DaveIsTheBest:build:production",
-              "serverTarget": "DaveIsTheBest:server:production"
-            }
-          },
-          "defaultConfiguration": "development"
-        },
-        "prerender": {
-          "builder": "@angular-devkit/build-angular:prerender",
-          "options": {
-            "routes": [
-              "/"
-            ]
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "DaveIsTheBest:build:production",
-              "serverTarget": "DaveIsTheBest:server:production"
-            },
-            "development": {
-              "browserTarget": "DaveIsTheBest:build:development",
-              "serverTarget": "DaveIsTheBest:server:development"
-            }
-          },
-          "defaultConfiguration": "production"
         }
       }
     }

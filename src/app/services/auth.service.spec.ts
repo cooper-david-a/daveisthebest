@@ -2,10 +2,7 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { AuthService, User } from './auth.service';
 import { provideHttpClient } from '@angular/common/http';
-import {
-  HttpTestingController,
-  provideHttpClientTesting,
-} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { Observable, lastValueFrom } from 'rxjs';
 
 describe('AuthService', () => {
