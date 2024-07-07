@@ -1,5 +1,12 @@
-import { KeyValuePipe } from '@angular/common';
-import { Component, OnInit, computed, input } from '@angular/core';
+import { KeyValuePipe, NgStyle } from '@angular/common';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  computed,
+  input,
+  viewChild,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Contours } from 'd3';
@@ -9,11 +16,18 @@ import { AxisComponent } from './axis/axis.component';
 @Component({
   selector: 'property-plot',
   standalone: true,
-  imports: [MatCheckboxModule, KeyValuePipe, FormsModule, AxisComponent],
+  imports: [
+    MatCheckboxModule,
+    KeyValuePipe,
+    FormsModule,
+    AxisComponent,
+    NgStyle,
+  ],
   templateUrl: './property-plot.component.html',
   styleUrl: './property-plot.component.scss',
 })
 export class PropertyPlotComponent implements OnInit {
+  plotElement = viewChild<ElementRef<SVGElement>>('plot');
   dummyData = {
     xVariable: 'P',
     yVariable: 'H',
@@ -28,11 +42,18 @@ export class PropertyPlotComponent implements OnInit {
     S: { data: [[]], thresholds: [] },
   };
   data = input<PlotMetaData | null>(this.dummyData);
+  marginTop = input<number>(30);
+  marginRight = input<number>(30);
+  marginBottom = input<number>(70);
+  marginLeft = input<number>(70);
 
-  width = computed(() => this.data()?.width ?? 0);
-  height = computed(() => this.data()?.height ?? 0);
-  viewBox = computed(() => `0,0,${this.width()},${this.height()}`);
-  transform = computed(() => `scale(1,-1) translate(0,${-this.height()})`);
+  contourViewBox = computed(
+    () => `0,0,${this.data()?.width},${this.data()?.height}`
+  );
+  contourTransform = computed(
+    () => `scale(1,-1) translate(0,${-(this.data()?.height ?? 0)})`
+  );
+
   xDomain = computed(() => {
     let xVariable = this.data()?.xVariable ?? 'H';
     let data = this.data() ?? this.dummyData;
@@ -41,6 +62,13 @@ export class PropertyPlotComponent implements OnInit {
       Math.max(...data[xVariable as keyof PlotData].data.flat()),
     ];
   });
+  xAxisTransform = computed(() => {
+    let plotHeight = this.plotElement()?.nativeElement.clientHeight ?? 0;
+    return `translate(${this.marginLeft()},${
+      plotHeight - this.marginBottom()
+    })`;
+  });
+
   yDomain = computed(() => {
     let yVariable = this.data()?.yVariable ?? 'P';
     let data = this.data() ?? this.dummyData;
@@ -48,6 +76,10 @@ export class PropertyPlotComponent implements OnInit {
       Math.min(...data[yVariable as keyof PlotData].data.flat()),
       Math.max(...data[yVariable as keyof PlotData].data.flat()),
     ];
+  });
+  yAxisTransform = computed(() => {
+    let plotHeight = this.plotElement()?.nativeElement.clientHeight ?? 0;
+    return `translate(${this.marginLeft()},${plotHeight - this.marginBottom()}) rotate(-90) scale(1,-1)`;
   });
 
   fields = {
@@ -68,7 +100,9 @@ export class PropertyPlotComponent implements OnInit {
 
     for (let field of Object.keys(this.fields)) {
       if (![data.xVariable, data.yVariable].includes(field)) {
-        generator = d3.contours().size([this.width(), this.height()]);
+        generator = d3
+          .contours()
+          .size([this.data()?.width ?? 0, this.data()?.height ?? 0]);
 
         if (data[field as keyof PlotData].thresholds.length > 0) {
           generator.thresholds(data[field as keyof PlotData].thresholds);

@@ -4,32 +4,67 @@
     @if(![data()?.xVariable,data()?.yVariable].includes(field.key)){
     <mat-checkbox [(ngModel)]="field.value.visible" class="legend-entry">
       {{ field.key }}
-      <svg
-        viewBox="0,0,17,5"
-        xmlns="http://www.w3.org/2000/svg"
-        class="legend-dash"
-      >
-        <path d="M.5,3L16.5,3" [class]="field.key" />
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 5" width="48">
+        <line
+          vector-effect="non-scaling-stroke"
+          x1="0"
+          y1="3"
+          x2="48"
+          y2="3"
+          [class]="field.key"
+        />
       </svg>
     </mat-checkbox>
     } }
   </div>
+  <svg class="plot" xmlns="http://www.w3.org/2000/svg" #plot>
+    <svg
+      class="contour-window"
+      [attr.x]="marginLeft()"
+      [attr.y]="marginTop()"
+      [attr.viewBox]="contourViewBox()"
+      [attr.width]="plot.clientWidth - marginLeft() - marginRight()"
+      [attr.height]="plot.clientHeight - marginBottom() - marginTop()"
+    >
+      @for(field of fields | keyvalue; track field){ @if(field.value.visible){
+      <g class="contours" [attr.transform]="contourTransform()">
+        @for(contourArray of contours()[field.key]; track contourArray){
+        @for(coordinatesArray of contourArray.coordinates; track
+        coordinatesArray){ @for(path of coordinatesArray; track path){
+        <path
+          vector-effect="non-scaling-stroke"
+          [attr.d]="generatePath(path)"
+          [class]="field.key"
+        />
+        } } }
+      </g>
+      } }
+    </svg>
 
-  <svg
-    [attr.viewBox]="viewBox()"
-    class="plot-window"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    @for(field of fields | keyvalue; track field){ @if(field.value.visible){
-    <g class="contours" [attr.transform]="transform()">
-      @for(contourArray of contours()[field.key]; track contourArray){
-      @for(coordinatesArray of contourArray.coordinates; track
-      coordinatesArray){ @for(path of coordinatesArray; track path){
-      <path [attr.d]="generatePath(path)" [class]="field.key" />
-      } } }
-    </g>
-    } }
-    <rect [attr.width]="width()" [attr.height]="height()" class="border"></rect>
-    <!-- <g axis [axisLength]="width()" [min]="xDomain()[0]" [max]="xDomain()[1]" spacing="log"> </g>-->
+    <g
+      class="x-axis"
+      axis
+      [min]="xDomain()[0]"
+      [max]="xDomain()[1]"
+      [axisLength]="plot.clientWidth - marginLeft() - marginRight()"
+      [attr.transform]="xAxisTransform()"
+      orientation="horizontal"
+    />
+    <g
+      class="y-axis"
+      axis
+      [min]="yDomain()[0]"
+      [max]="yDomain()[1]"
+      [axisLength]="plot.clientHeight - marginTop() - marginBottom()"
+      [attr.transform]="yAxisTransform()"
+      orientation="vertical"
+    />
+    <rect
+      class="border"
+      [attr.height]="plot.clientHeight - marginTop() - marginBottom()"
+      [attr.width]="plot.clientWidth - marginLeft() - marginRight()"
+      [attr.x]="marginLeft()"
+      [attr.y]="marginTop()"
+    />
   </svg>
 </div>

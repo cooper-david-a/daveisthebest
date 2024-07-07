@@ -1,6 +1,27 @@
-<svg:path
-  class="axis-base"
-  d="M0,3L50,3"
-  stroke = "white"
-  [style.stroke-width]="strokeWidth()"
-></svg:path>
+<svg:line
+  class="axis-line"
+  x1="0"
+  y1="0"
+  [attr.x2]="axisLength()"
+  y2="0"
+></svg:line>
+
+@for (tick of scale().ticks(10); track tick){ @if(tick>0){
+<svg:line
+  class="axis-tick"
+  [attr.x1]="scale()(tick)"
+  [attr.y1]="outsideTickLength()"
+  [attr.x2]="scale()(tick)"
+  [attr.y2]="-insideTickLength()"
+></svg:line>
+
+
+<svg:text
+  [attr.font-size]="fontSize()"
+  vector-effect="non-scaling-stroke"
+  text-anchor="middle"
+  [attr.transform]="positionText(tick)"
+>
+  {{ scale().tickFormat(10, "s")(tick) }}
+</svg:text>
+} }

@@ -1,70 +1,107 @@
+@use "@angular/material" as mat;
+@use "src/themes/dark-theme.scss" as dark;
+@use "src/themes/light-theme.scss" as light;
+
 .container {
   margin: auto;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   max-width: 600px;
-
-  .plot-window {
-    path {
-      fill: none;
-      stroke: #fff;
-      stroke-opacity: 0.6;
-      stroke-width: 0.1;
-    }
-    .border {
-      fill: none;
-      stroke: #fff;
-      stroke-opacity: 1;
-      stroke-width: .6;
-    }
-  }
-
   .legend-box {
     display: flex;
     flex-wrap: wrap;
-    max-width: 600px;
+    max-width: 80%;
     align-items: center;
     justify-content: center;
     row-gap: 1em;
+    margin-top: 1em;
     .legend-entry {
+      border: 1px solid
+        mat.get-theme-color(dark.$dark-theme, foreground, divider);
       ::ng-deep .mdc-label {
         display: flex;
         align-items: center;
+        gap: 1ch;
         svg {
-          width: 100px;
-          path {
+          margin: 1ch;
+          line {
             fill: none;
-            stroke: #fff;
+            stroke: mat.get-theme-color(dark.$dark-theme, foreground, text);
             stroke-opacity: 0.6;
-            stroke-width: 0.1;
+            stroke-width: 1;
           }
         }
       }
     }
   }
+  .plot {
+    aspect-ratio: 1;
+    .contour-window {
+      path {
+        fill: none;
+        stroke: mat.get-theme-color(dark.$dark-theme, foreground, text);
+        stroke-opacity: 0.6;
+        stroke-width: 1;
+      }
+    }
+    .border {
+      fill: none;
+      stroke: mat.get-theme-color(dark.$dark-theme, foreground, divider);
+      stroke-opacity: 1;
+      stroke-width: 2;
+    }
+  }
 }
 
 .Q {
-  stroke-dasharray: 5, 3;
+  stroke-dasharray: 15, 9;
 }
 
 .T {
-  stroke-dasharray: 1, 1;
+  stroke-dasharray: 3, 3;
 }
 .D {
-  stroke-dasharray: 3, 2, 1, 2;
+  stroke-dasharray: 15, 6, 3, 6;
 }
 .U {
-  stroke-dasharray: 3, 1, 1, 1, 1, 1;
+  stroke-dasharray: 15, 3, 3, 3, 3, 3;
 }
 // .S {
 // }
 .V {
-  stroke-dasharray: 3, 1;
+  stroke-dasharray: 9, 3;
 }
 .P {
-  stroke-dasharray: 1, 1;
+  stroke-dasharray: 3, 3;
 }
 // .H {
 // }
+
+@media (prefers-color-scheme: light) {
+  .container {
+    .legend-box {
+      .legend-entry {
+        border: 1px solid
+          mat.get-theme-color(light.$light-theme, foreground, divider);
+        ::ng-deep .mdc-label {
+          svg {
+            line {
+              stroke: mat.get-theme-color(light.$light-theme, foreground, text);
+            }
+          }
+        }
+      }
+    }
+    .plot {
+      .contour-window {
+        path {
+          stroke: mat.get-theme-color(light.$light-theme, foreground, text);
+        }
+      }
+      .border {
+        stroke: mat.get-theme-color(light.$light-theme, foreground, divider);
+      }
+    }
+  }
+}

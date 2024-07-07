@@ -1,0 +1,22 @@
+@use "@angular/material" as mat;
+@use "src/themes/dark-theme.scss" as dark;
+@use "src/themes/light-theme.scss" as light;
+
+text {
+  fill: mat.get-theme-color(dark.$dark-theme, foreground, text);
+}
+
+line {
+  stroke: mat.get-theme-color(dark.$dark-theme, foreground, text);
+  stroke-width: 1px;
+}
+
+@media (prefers-color-scheme: light) {
+  text {
+    fill: mat.get-theme-color(light.$light-theme, foreground, text);
+  }
+
+  line {
+    stroke: mat.get-theme-color(light.$light-theme, foreground, text);
+  }
+}

@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { AfterViewChecked, Component, computed, input } from '@angular/core';
 import * as d3 from 'd3';
 
 @Component({
@@ -10,17 +10,29 @@ import * as d3 from 'd3';
 })
 export class AxisComponent {
   axisLength = input.required<number>();
-  strokeWidth = input<number>(0.1);
+  orientation = input<'horizontal' | 'vertical'>('horizontal');
+  strokeWidth = input<number>(2);
   min = input.required<number>();
   max = input.required<number>();
   spacing = input<'linear' | 'log'>('linear');
+  insideTickLength = input(5);
+  outsideTickLength = input(5);
+  fontSize = input(15);
   scale = computed(() => {
-    console.log(
-      d3.scaleLinear([0, this.axisLength()], [this.min(), this.max()])
-    );
     if (this.spacing() === 'log') {
-      return d3.scaleLog([0, this.axisLength()], [this.min(), this.max()]);
+      return d3
+        .scaleLog([this.min(), this.max()], [0, this.axisLength()])
+        .nice();
     }
-    return d3.scaleLinear([0, this.axisLength()], [this.min(), this.max()]);
+    return d3
+      .scaleLinear([this.min(), this.max()], [0, this.axisLength()])
+      .nice();
   });
+
+  positionText(tickValue: number) {
+    let reflect = this.orientation() != 'horizontal';
+    return `translate(${this.scale()(tickValue)}, ${
+      this.outsideTickLength() + 20
+    }) ${reflect?'rotate(90) scale(-1,1)':''}`;
+  }
 }

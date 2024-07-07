@@ -278,11 +278,17 @@
     </mat-tab>
 
     <mat-tab label="PH Diagram">
-      @defer(on viewport;) { <property-plot [data]="PHData"></property-plot> } @placeholder {<div></div>}
+      @defer(on viewport) { <property-plot [data]="PHData"></property-plot> }
+      @placeholder {
+      <div></div>
+      }
     </mat-tab>
 
     <mat-tab label="TS Diagram">
-      @defer{<property-plot [data]="TSData"></property-plot>}
+      @defer(on viewport) {<property-plot [data]="TSData"></property-plot
+      >}@placeholder {
+      <div></div>
+      }
     </mat-tab>
   </mat-tab-group>
 </div>
