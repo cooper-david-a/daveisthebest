@@ -31,8 +31,8 @@ export class PropertyPlotComponent implements OnInit {
   dummyData = {
     xVariable: 'P',
     yVariable: 'H',
-    width: 0,
-    height: 0,
+    nx: 0,
+    ny: 0,
     Q: { data: [[]], thresholds: [] },
     T: { data: [[]], thresholds: [] },
     P: { data: [[]], thresholds: [] },
@@ -48,11 +48,19 @@ export class PropertyPlotComponent implements OnInit {
   marginLeft = input<number>(70);
 
   contourViewBox = computed(
-    () => `0,0,${this.data()?.width},${this.data()?.height}`
+    () => `0,0,${this.data()?.nx},${this.data()?.ny}`
   );
   contourTransform = computed(
-    () => `scale(1,-1) translate(0,${-(this.data()?.height ?? 0)})`
+    () => `scale(1,-1) translate(0,${-(this.data()?.ny ?? 0)})`
   );
+  contourWidth = computed(()=>{
+    let plotElementWidth = this.plotElement()?.nativeElement.clientWidth ?? 0;
+    return plotElementWidth - this.marginLeft() - this.marginRight();
+  })
+  contourHeight = computed(()=>{
+    let plotElementHeight = this.plotElement()?.nativeElement.clientHeight ?? 0;
+    return plotElementHeight - this.marginTop() - this.marginBottom();
+  })
 
   xDomain = computed(() => {
     let xVariable = this.data()?.xVariable ?? 'H';
@@ -90,7 +98,6 @@ export class PropertyPlotComponent implements OnInit {
     U: { visible: false },
     H: { visible: false },
     S: { visible: false },
-    V: { visible: false },
   };
 
   contours = computed(() => {
@@ -102,7 +109,7 @@ export class PropertyPlotComponent implements OnInit {
       if (![data.xVariable, data.yVariable].includes(field)) {
         generator = d3
           .contours()
-          .size([this.data()?.width ?? 0, this.data()?.height ?? 0]);
+          .size([this.data()?.nx ?? 0, this.data()?.ny ?? 0]);
 
         if (data[field as keyof PlotData].thresholds.length > 0) {
           generator.thresholds(data[field as keyof PlotData].thresholds);
@@ -139,8 +146,8 @@ export class PropertyPlotComponent implements OnInit {
 export interface PlotMetaData extends PlotData {
   xVariable: string;
   yVariable: string;
-  height: number;
-  width: number;
+  ny: number;
+  nx: number;
 }
 
 export interface PlotData {

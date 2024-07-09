@@ -46,8 +46,8 @@
       }
     }
     .border {
-      fill: none;
-      stroke: mat.get-theme-color(dark.$dark-theme, foreground, divider);
+      fill: white;
+      stroke: mat.get-theme-color(dark.$dark-theme, foreground, text);
       stroke-opacity: 1;
       stroke-width: 2;
     }
